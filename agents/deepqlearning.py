@@ -60,6 +60,8 @@ class DeepQLearningAgent(BaseAgent):
 
             self.optimizer.zero_grad()
             loss.backward()
+
+            torch.nn.utils.clip_grad_value_(self.dqn.parameters(), 100)
             self.optimizer.step()
 
         ####
@@ -101,7 +103,7 @@ class DeepQLearningAgent(BaseAgent):
 
         with torch.no_grad():
             expected_qvalues = self.gamma * self.target_dqn(next_state).max(1).values * (1 - done) + reward
-        
+
         loss = self.criterion(qvlues, expected_qvalues)
 
         return loss
