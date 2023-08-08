@@ -217,8 +217,8 @@ def main():
 
     create_parser.add_argument("-dqn", type=int, help="Topology of the neural network.", default=1)
     create_parser.add_argument("-lr", type=float, help="Learning rate.", default=0.00001)
-    create_parser.add_argument("-capacity", type=int, help="Capacity of the replay memory.", default=1000)
-    create_parser.add_argument("-batch", type=int, help="Batch size.", default=100)
+    create_parser.add_argument("-capacity", type=int, help="Capacity of the replay memory.", default=10000)
+    create_parser.add_argument("-batch", type=int, help="Batch size.", default=1000)
     create_parser.add_argument("-skip", type=int, help="Step skip between two learning step.", default=50)
     
     create_parser.add_argument("-d", type=float, help="Discretisation step.", default=0.01)

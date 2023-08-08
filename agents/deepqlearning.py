@@ -31,6 +31,7 @@ class DeepQLearningAgent(BaseAgent):
 
         self.dqn = DQN(n)
         self.optimizer = torch.optim.Adam(self.dqn.parameters(), lr=self.lr, amsgrad=True)
+        self.criterion = torch.nn.SmoothL1Loss()
     
     def transform_state(self, state):
         #### Write your code here for task  4
@@ -93,8 +94,7 @@ class DeepQLearningAgent(BaseAgent):
         with torch.no_grad():
             expected_qvalues = self.gamma * self.dqn(next_state).max(1).values * (1 - done) + reward
         
-        criterion = torch.nn.SmoothL1Loss()
-        loss = criterion(qvlues, expected_qvalues)
+        loss = self.criterion(qvlues, expected_qvalues)
 
         return loss
 
