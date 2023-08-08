@@ -101,7 +101,7 @@ def create(args):
         print(f"Creating agent {args.agent}.")
 
     if args.type == "ql":
-        agent = agents.QLearningAgent(args.agent, lr=args.lr, gamma=args.gamma, eps=args.eps, end_eps=args.eeps, d_step=args.d, eps_decay=args.edecay)
+        agent = agents.QLearningAgent(args.agent, alpha=args.alpha, gamma=args.gamma, eps=args.eps, end_eps=args.eeps, d_step=args.d, eps_decay=args.edecay)
         agent.save()
 
 def reward(args):
@@ -201,7 +201,7 @@ def main():
     create_parser.add_argument("type", help="name of the agent to create", choices=["ql"])
     create_parser.add_argument("agent", help="name of the agent to create")
 
-    create_parser.add_argument("-lr", type=float, help="Learning rate.", default=0.0001)
+    create_parser.add_argument("-alpha", type=float, help="Learning factor.", default=0.0001)
     create_parser.add_argument("-gamma", type=float, help="The Bellman's equation gamma.", default=0.99)
     create_parser.add_argument("-eps", type=float, help="Epsilon parameter for epsilon greedy algorithm.", default=0.5)
     create_parser.add_argument("-eeps", type=float, help="End epsilon parameter for epsilon greedy algorithm.", default=0.01)

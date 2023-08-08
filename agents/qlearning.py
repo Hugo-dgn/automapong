@@ -3,11 +3,11 @@ import numpy as np
 from agents.super import BaseAgent
 
 class QLearningAgent(BaseAgent):
-    def __init__(self, name, lr, gamma, eps, end_eps, d_step, eps_decay):
+    def __init__(self, name, alpha, gamma, eps, end_eps, d_step, eps_decay):
         BaseAgent.__init__(self, name)
         self.Q = {}
 
-        self.lr = lr
+        self.alpha = alpha
         self.gamma = gamma
         self.eps = eps
         self.end_eps = end_eps
@@ -51,7 +51,7 @@ class QLearningAgent(BaseAgent):
         if done:
             self.Q[state][action] = reward
         else:
-            self.Q[state][action] += self.lr * (reward + self.gamma * max_next_q - self.Q[state][action])
+            self.Q[state][action] += self.alpha * (reward + self.gamma * max_next_q - self.Q[state][action])
         
         ####
 
