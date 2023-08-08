@@ -53,9 +53,9 @@ class DeepQLearningAgent(BaseAgent):
 
         #### Write your code here for task
         self.memory.push(state, action, next_state, reward, done)
-        self.update_target()
 
         if len(self.memory) >= self.batch and self.step % self.skip == 0:
+            self.update_target()
             loss = self.get_loss()
 
             self.optimizer.zero_grad()
@@ -77,6 +77,8 @@ class DeepQLearningAgent(BaseAgent):
             q_values = self.dqn(state).squeeze(0)
 
         action = torch.argmax(q_values).item() - 1
+
+        print(action)
 
         return action
     
