@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 import agents
-import pong
+import network
 
 from play import play
 from train import train
@@ -102,6 +102,10 @@ def create(args):
 
     if args.type == "ql":
         agent = agents.QLearningAgent(args.agent, alpha=args.alpha, gamma=args.gamma, eps=args.eps, end_eps=args.eeps, d_step=args.d, eps_decay=args.edecay)
+        agent.save()
+    elif args.type == "dql":
+        DQN = network.get_topology(args.dqn)
+        agent = agents.DeepQLearningAgent(args.agent, DQN=DQN, lr=args.lr, alpha=args.alpha, gamma=args.gamma, eps=args.eps, end_eps=args.eeps, eps_decay=args.edecay, capacity=args.capacity, batch=args.batch, skip=args.skip)
         agent.save()
 
 def reward(args):
@@ -198,7 +202,7 @@ def main():
     train_parser.set_defaults(func=_train)
     
     create_parser = subparsers.add_parser("create", help="Create an agent")
-    create_parser.add_argument("type", help="name of the agent to create", choices=["ql"])
+    create_parser.add_argument("type", help="name of the agent to create", choices=["dql", "ql"])
     create_parser.add_argument("agent", help="name of the agent to create")
 
     create_parser.add_argument("-alpha", type=float, help="Learning factor.", default=0.0001)
@@ -206,6 +210,13 @@ def main():
     create_parser.add_argument("-eps", type=float, help="Epsilon parameter for epsilon greedy algorithm.", default=0.5)
     create_parser.add_argument("-eeps", type=float, help="End epsilon parameter for epsilon greedy algorithm.", default=0.01)
     create_parser.add_argument("-edecay", type=float, help="Exponential decay parameter for epsilon greedy algorithm.", default=0.001)
+
+    create_parser.add_argument("-dqn", type=int, help="Topology of the neural network.", default=1)
+    create_parser.add_argument("-lr", type=float, help="Learning rate.", default=0.00001)
+    create_parser.add_argument("-capacity", type=int, help="Capacity of the replay memory.", default=1000)
+    create_parser.add_argument("-batch", type=int, help="Batch size.", default=100)
+    create_parser.add_argument("-skip", type=int, help="Step skip between two learning step.", default=50)
+    
     create_parser.add_argument("-d", type=float, help="Discretisation step.", default=0.01)
 
     create_parser.set_defaults(func=create)

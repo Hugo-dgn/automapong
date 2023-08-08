@@ -326,7 +326,7 @@ La dernière étape facile ! Codons la méthode `act` de notre agent. Pour rappe
 Nous y voilà enfin ! Il est temps de coder la partie d'apprentissage de cet agent. Cette phase consiste essentiellement à implémenter l'équation de Bellman dans la méthode `learn`. Pour rappel, voici l'équation en question, qui permet de mettre à jour les valeurs du dictionnaire `Q` :
 
 $$
-Q(s, a) = Q(s, a) + alpha \cdot (r + \gamma \cdot \max(Q(s', a')) - Q(s, a))
+Q(s, a) = Q(s, a) + \alpha \cdot (r + \gamma \cdot \max(Q(s', a')) - Q(s, a))
 $$
 
 Les variables correspondantes aux paramètres de la méthode `learn` sont les suivantes :
@@ -643,7 +643,7 @@ python main.py train simple ql1 ql2 -e 1000 -r 2
  ```bash 
  python main.py reward ql1 ql2
  ```
-![reward](images/alpha.png)
+![reward](images/tweek_alpha.png)
 Nous constatons qu'un faible taux d'apprentissage `alpha` est préférable. Vous pouvez poursuivre les comparaisons avec les hyperparamètres (cette étape peut être très longue, vous pouvez choisir de la sauter) :
 - `gamma` (le $\gamma$ de l'équation de `Bellman`):
 ```bash
@@ -692,4 +692,39 @@ Pour régler ce problème nous allons nous tourner vers les réseaux de neuronne
 
 ## Deep-QLearning
 
-Nous allons étudier une autre implémentation de la fonction `Q`, les réseaux de neuronnes profonds. 
+Nous allons étudier une autre implémentation de la fonction `Q`, les réseaux de neuronnes profonds. Voici la topologie d'un réseaux de neuronnes pour un agent dont la méthode `transform_state` renvoie un `tuple` de `n` `float`:
+- input layer : `n` neuronnes.
+- hidden layers : peut être nimporte quoi.
+- output layer : `3` neuronnes (pour `up`, `down` et `nothing`).
+
+Si `state` est le `tuple` donné par `transform_state` alors avec cette implémentation `Q(state) = q_values` où:
+- `q_values[0]` : `q_value` estimée si l'agent décend (`action=-1`).
+- `q_values[1]` : `q_value` estimée si l'agent reste sur place (`action=0`).
+- `q_values[2]` : `q_value` estimée si l'agent monte (`action=1`).
+
+Nous allons tout de suite définir nôtre première topologie ! Ouvrez `network/topology.py`, vous devez voir ceci :
+
+```python
+import torch.nn as nn
+
+
+class DQN_1(nn.Module):
+    
+    def __init__(self, n_inputs):
+        nn.Module.__init__(self) # Tell torch that this class is a neural network
+
+        #### Write your code here for task 12
+        
+        ####
+    
+    def forward(self, x):
+        #### Write your code here for task 12
+        pass
+        ####
+```
+
+### Tâche 12
+
+Complétez `__init__` et `forward` pour que cette class représente un réseaux de neuronnes tel que:
+- nombre d'entrers = `n_inputs`
+- nombre de sorties = `3`

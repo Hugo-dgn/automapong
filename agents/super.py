@@ -32,22 +32,16 @@ class BaseAgent:
     
     def learn(self, state, action, reward, next_state, done):
         pass
-
-    def _before_save(self):
-        self._current_game_reward = []
-        self._reward_history = smooth_history(self._reward_history)
-        self.before_save()
     
     def before_save(self):
         pass
 
     def save(self):
-        agent = copy.deepcopy(self)
-        agent._before_save()
+        self._reward_history = smooth_history(self._reward_history)
 
         path = "agents/save/"
-        with open(path+agent.name, 'wb') as f:
-            torch.save(agent, f)
+        with open(path+self.name, 'wb') as f:
+            torch.save(self, f)
     
     def init(self):
         pass

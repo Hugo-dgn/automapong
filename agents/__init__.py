@@ -2,6 +2,7 @@ from agents.human import HumanAgent
 from agents.simple import SimpleAgent
 from agents.super import BaseAgent
 from agents.qlearning import QLearningAgent
+from agents.deepqlearning import DeepQLearningAgent
 
 
 import torch as _torch

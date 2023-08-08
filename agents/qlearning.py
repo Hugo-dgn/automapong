@@ -37,6 +37,8 @@ class QLearningAgent(BaseAgent):
         return d_s
 
     def learn(self, state, action, reward, next_state, done):
+        self.step += 1
+
         state = self.transform_state(state)
         next_state = self.transform_state(next_state)
 
@@ -56,7 +58,6 @@ class QLearningAgent(BaseAgent):
         ####
 
     def act(self, state, training):
-        self.step += 1
 
         state = self.transform_state(state) # transform the state in something usable
         self.check_q_value(state) # if the state is not in self.Q, add it.

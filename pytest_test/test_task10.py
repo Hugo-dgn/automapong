@@ -4,8 +4,8 @@ import scipy.stats as stats
 from agents import QLearningAgent
 
 
-n = 100
-alpha = 0.01
+n = 1000
+alpha = 0.005
 
 def test_task9_eps():
 
