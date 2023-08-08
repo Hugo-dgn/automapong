@@ -109,7 +109,7 @@ def create(args):
         agent.save()
     elif args.type == "dql":
         DQN = network.get_topology(args.dqn)
-        agent = agents.DeepQLearningAgent(args.agent, DQN=DQN, lr=args.lr, gamma=args.gamma, eps=args.eps, end_eps=args.eeps, eps_decay=args.edecay, capacity=args.capacity, batch=args.batch, tau=args.tau, update=args.update)
+        agent = agents.DeepQLearningAgent(args.agent, DQN=DQN, lr=args.lr, gamma=args.gamma, eps=args.eps, end_eps=args.eeps, eps_decay=args.edecay, capacity=args.capacity, batch=args.batch, tau=args.tau, skip=args.skip)
         agent.save()
 
 def reward(args):
@@ -219,8 +219,8 @@ def main():
     create_parser.add_argument("-lr", type=float, help="Learning rate.", default=1e-3)
     create_parser.add_argument("-capacity", type=int, help="Capacity of the replay memory.", default=10000)
     create_parser.add_argument("-batch", type=int, help="Batch size.", default=1000)
-    create_parser.add_argument("-tau", type=float, help="Step skip between two learning step.", default=0.01)
-    create_parser.add_argument("-update", type=int, help="Step between two update of the target network.", default=100)
+    create_parser.add_argument("-tau", type=float, help="Inverse of the step needed between two update of the target network.", default=0.01)
+    create_parser.add_argument("-skip", type=int, help="Step skip between two learning step.", default=100)
     
     create_parser.add_argument("-d", type=float, help="Discretisation step.", default=0.01)
 

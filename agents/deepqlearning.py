@@ -10,13 +10,13 @@ from agents.super import BaseAgent
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 class DeepQLearningAgent(BaseAgent):
-    def __init__(self, name, DQN, lr, gamma, eps, end_eps, eps_decay, capacity, batch, tau, update):
+    def __init__(self, name, DQN, lr, gamma, eps, end_eps, eps_decay, capacity, batch, tau, skip):
         BaseAgent.__init__(self, name)
         self.lr = lr
         self.memory = ReplayMemory(capacity)
         self.batch = batch
         self.tau = tau
-        self.update = update
+        self.skip = skip
 
         self.gamma = gamma
         self.eps = eps
