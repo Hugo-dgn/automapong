@@ -78,8 +78,6 @@ class DeepQLearningAgent(BaseAgent):
 
         action = torch.argmax(q_values).item() - 1
 
-        print(action)
-
         return action
     
         ####
