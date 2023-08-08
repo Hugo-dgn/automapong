@@ -7,6 +7,7 @@ import sys
 import os
 
 import humanize
+import torch
 
 import argparse
 import matplotlib.pyplot as plt
@@ -43,6 +44,9 @@ def _play(args):
     play(agent1, agent2)
 
 def _train(args):
+
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    print(f"Trainig using {device}")
 
     train_agents = []
 
