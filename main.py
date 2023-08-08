@@ -105,7 +105,7 @@ def create(args):
         print(f"Creating agent {args.agent}.")
 
     if args.type == "ql":
-        agent = agents.QLearningAgent(args.agent, alpha=args.alpha, gamma=args.gamma, eps=args.eps, end_eps=args.eeps, d_step=args.d, eps_decay=args.edecay)
+        agent = agents.QLearningAgent(args.agent, gamma=args.gamma, eps=args.eps, end_eps=args.eeps, d_step=args.d, eps_decay=args.edecay)
         agent.save()
     elif args.type == "dql":
         DQN = network.get_topology(args.dqn)
