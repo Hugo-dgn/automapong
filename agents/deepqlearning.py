@@ -10,12 +10,13 @@ from agents.super import BaseAgent
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 class DeepQLearningAgent(BaseAgent):
-    def __init__(self, name, DQN, lr, gamma, eps, end_eps, eps_decay, capacity, batch, skip):
+    def __init__(self, name, DQN, lr, gamma, eps, end_eps, eps_decay, capacity, batch, skip, update):
         BaseAgent.__init__(self, name)
         self.lr = lr
         self.memory = ReplayMemory(capacity)
         self.batch = batch
         self.skip = skip
+        self.update = update
 
         self.gamma = gamma
         self.eps = eps
@@ -29,6 +30,8 @@ class DeepQLearningAgent(BaseAgent):
         n = len(self.transform_state(dummie_state).squeeze(0))
 
         self.dqn = DQN(n)
+        self.target_dqn = DQN(n)
+
         self.optimizer = torch.optim.Adam(self.dqn.parameters(), lr=self.lr, amsgrad=True)
         self.criterion = torch.nn.SmoothL1Loss()
     
@@ -50,6 +53,7 @@ class DeepQLearningAgent(BaseAgent):
 
         #### Write your code here for task
         self.memory.push(state, action, next_state, reward, done)
+        self.update_target()
 
         if len(self.memory) >= self.batch and self.step % self.skip == 0:
             loss = self.get_loss()
@@ -69,13 +73,18 @@ class DeepQLearningAgent(BaseAgent):
         
         #### Write your code here for task
 
-        q_values = self.dqn(state).squeeze(0)
+        with torch.no_grad():
+            q_values = self.dqn(state).squeeze(0)
 
         action = torch.argmax(q_values).item() - 1
 
         return action
     
         ####
+    
+    def update_target(self):
+        if self.step % self.update == 0:
+            self.target_dqn.load_state_dict(self.dqn.state_dict())
     
     def get_loss(self):
         #### Write your code here for task
@@ -91,7 +100,7 @@ class DeepQLearningAgent(BaseAgent):
         qvlues = out.gather(1, action.unsqueeze(1)).squeeze(1)
 
         with torch.no_grad():
-            expected_qvalues = self.gamma * self.dqn(next_state).max(1).values * (1 - done) + reward
+            expected_qvalues = self.gamma * self.target_dqn(next_state).max(1).values * (1 - done) + reward
         
         loss = self.criterion(qvlues, expected_qvalues)
 
