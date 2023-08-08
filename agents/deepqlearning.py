@@ -10,12 +10,12 @@ from agents.super import BaseAgent
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 class DeepQLearningAgent(BaseAgent):
-    def __init__(self, name, DQN, lr, gamma, eps, end_eps, eps_decay, capacity, batch, skip, update):
+    def __init__(self, name, DQN, lr, gamma, eps, end_eps, eps_decay, capacity, batch, tau, update):
         BaseAgent.__init__(self, name)
         self.lr = lr
         self.memory = ReplayMemory(capacity)
         self.batch = batch
-        self.skip = skip
+        self.tau = tau
         self.update = update
 
         self.gamma = gamma
@@ -85,8 +85,13 @@ class DeepQLearningAgent(BaseAgent):
         ####
     
     def update_target(self):
-        if self.step % self.update == 0:
-            self.target_dqn.load_state_dict(self.dqn.state_dict())
+        target_net_state_dict = self.target_dqn.state_dict()
+        dqn_net_state_dict = self.dqn.state_dict()
+
+        for key in dqn_net_state_dict:
+            target_net_state_dict[key] = dqn_net_state_dict[key]*self.tau + target_net_state_dict[key]*(1-self.tau)
+        
+        self.target_dqn.load_state_dict(target_net_state_dict)
     
     def get_loss(self):
         #### Write your code here for task
