@@ -1,7 +1,8 @@
 #### learning Parameters ####
 
 touch_reward = 1 #reward given each time the player touches the ball
-win_reward = 5 #reward given when the player won
+op_touch_reward = -1
+win_reward = 10 #reward given when the player won
 loss_reward = -10 #reward given when the player lost
 skip = 1 # agent makes a decision each skip step
 
@@ -51,9 +52,6 @@ class Env:
 
         self.win_history = []
 
-        self.touch_reward = touch_reward
-        self.win_reward = win_reward
-        self.loss_reward = loss_reward
         self.skip = skip
 
     def get_state(self):
@@ -74,16 +72,18 @@ class Env:
         touche = self.game.touche()
 
         if win == 1:
-            reward1 += self.win_reward
-            reward2 += self.loss_reward
+            reward1 += win_reward
+            reward2 += loss_reward
         elif win == 2:
-            reward1 += self.loss_reward
-            reward2 += self.win_reward
+            reward1 += loss_reward
+            reward2 += win_reward
         
         if touche == 1:
-            reward1 += self.touch_reward
+            reward1 += touch_reward
+            reward2 += op_touch_reward
         if touche == 2:
-            reward2 += self.touch_reward
+            reward2 += touch_reward
+            reward1 += op_touch_reward
 
         return reward1, reward2
 
