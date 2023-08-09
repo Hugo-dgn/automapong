@@ -216,11 +216,11 @@ Il nous faut maintenant une méthode pour trouver (approcher) cette fonction `Q`
 **Mise à jour de la fonction Q** : Lorsque l'agent exécute une action dans un état donné, il reçoit une récompense de l'environnement et atteint un nouvel état. L'agent utilise ces informations pour mettre à jour la valeur `Q` de la paire `(état actuel, action)` en utilisant la formule de mise à jour `Q` :
 
 $$
-Q(s, a) = Q(s, a) + \alpha \cdot (r + \gamma \cdot \max(Q(s', a')) - Q(s, a))
+Q(s, a) = Q(s, a) + lr \cdot (r + \gamma \cdot \max(Q(s', a')) - Q(s, a))
 $$
 
 - $Q(s, a)$ : la valeur $Q$ de l'état $s$ et de l'action $a$.
-- $\alpha$ : learning rate, contrôle l'ampleur de la mise à jour.
+- $lr$ : learning rate, contrôle l'ampleur de la mise à jour.
 - $r$ : récompense obtenue en effectuant l'action $a$ dans l'état $s$.
 - $\gamma$ : facteur d'escompte, prend en compte l'importance des récompenses à court terme par rapport aux récompenses à long terme ($0 < \gamma < 1$ car $\sum_{n=0}^\infty \gamma^n$ doit converger).
 - $\max(Q(s', a'))$ : la valeur $Q$ maximale pour les actions possibles dans le prochain état $s'$.
@@ -241,11 +241,11 @@ import numpy as np
 from agents.super import BaseAgent
 
 class QLearningAgent(BaseAgent):
-    def __init__(self, name, alpha, gamma, eps, end_eps, d_step, eps_decay):
+    def __init__(self, name, lr, gamma, eps, end_eps, d_step, eps_decay):
         BaseAgent.__init__(self, name)
         self.Q = {}
 
-        self.alpha = alpha
+        self.lr = lr
         self.gamma = gamma
         self.eps = eps
         self.end_eps = end_eps
@@ -326,7 +326,7 @@ La dernière étape facile ! Codons la méthode `act` de notre agent. Pour rappe
 Nous y voilà enfin ! Il est temps de coder la partie d'apprentissage de cet agent. Cette phase consiste essentiellement à implémenter l'équation de Bellman dans la méthode `learn`. Pour rappel, voici l'équation en question, qui permet de mettre à jour les valeurs du dictionnaire `Q` :
 
 $$
-Q(s, a) = Q(s, a) + \alpha \cdot (r + \gamma \cdot \max(Q(s', a')) - Q(s, a))
+Q(s, a) = Q(s, a) + lr \cdot (r + \gamma \cdot \max(Q(s', a')) - Q(s, a))
 $$
 
 Les variables correspondantes aux paramètres de la méthode `learn` sont les suivantes :
@@ -338,8 +338,8 @@ Les variables correspondantes aux paramètres de la méthode `learn` sont les su
 On rappelle que:
 - $Q(s, a)$ = `Q[state][action]`
 
-Il reste les valeurs de $\alpha$, $\gamma$ et $a'$, et voici comment y accéder :
-- $\alpha$ = `self.alpha`.
+Il reste les valeurs de $lr$, $\gamma$ et $a'$, et voici comment y accéder :
+- $lr$ = `self.lr`.
 - $gamma$ = `self.gamma`.
 - $a'$ = `(-1, 0, 1)` (On veut le $\max$ de $Q(s', \cdot )$ sur $a'$)
 
@@ -489,11 +489,11 @@ Pour réduire le nombre d'états, la solution est assez simple : nous allons dis
 from agents.super import BaseAgent
 
 class QLearningAgent(BaseAgent):
-    def __init__(self, name, alpha, gamma, eps, end_eps, d_step, eps_decay):
+    def __init__(self, name, lr, gamma, eps, end_eps, d_step, eps_decay):
         BaseAgent.__init__(self, name)
         self.Q = {}
 
-        self.alpha = alpha
+        self.lr = lr
         self.gamma = gamma
         self.eps = eps
         self.end_eps = end_eps
@@ -535,7 +535,7 @@ class QLearningAgent(BaseAgent):
         if done:
             self.Q[state][action] = reward
         else:
-            self.Q[state][action] += self.alpha * (reward + self.gamma * max_next_q - self.Q[state][action])
+            self.Q[state][action] += self.lr * (reward + self.gamma * max_next_q - self.Q[state][action])
         
         ####
 
@@ -633,8 +633,8 @@ Essayez maintenant de jouer contre cet agent :
  ```
 Normalement, vous parvenez toujours à le vaincre sans trop de difficulté. Peut-être que nos hyperparamètres ne sont pas adaptés à l'apprentissage ? Je vous encourage à expérimenter avec différents paramètres. Par exemple :
  ```bash
-python main.py create ql ql1 -alpha 0.1
-python main.py create ql ql2 -alpha 0.0001
+python main.py create ql ql1 -lr 0.1
+python main.py create ql ql2 -lr 0.0001
 python main.py train simple ql1 ql2 -e 1000 -r 2
  ```
  **Attention** : Cette commande peut prendre un certain temps. En effet, nous souhaitons entraîner 3 agents pendant 2 `rounds`, où chaque match se compose de `1,000` `épisodes`. Cela équivaut à `3` matchs de `1,000` `épisodes` pour chacun des `2` `rounds`, soit un total de `6,000` `épisodes`.
@@ -644,7 +644,7 @@ python main.py train simple ql1 ql2 -e 1000 -r 2
  python main.py reward ql1 ql2
  ```
 ![reward](images/tweek_alpha.png)
-Nous constatons qu'un faible taux d'apprentissage `alpha` est préférable. Vous pouvez poursuivre les comparaisons avec les hyperparamètres (cette étape peut être très longue, vous pouvez choisir de la sauter) :
+Nous constatons qu'un faible taux d'apprentissage `lr` est préférable. Vous pouvez poursuivre les comparaisons avec les hyperparamètres (cette étape peut être très longue, vous pouvez choisir de la sauter) :
 - `gamma` (le $\gamma$ de l'équation de `Bellman`):
 ```bash
 python main.py create ql ql1 -gamma 0.9
