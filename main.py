@@ -216,7 +216,7 @@ def main():
     create_parser.add_argument("-edecay", type=float, help="Exponential decay parameter for epsilon greedy algorithm.", default=1e-4)
 
     create_parser.add_argument("-dqn", type=int, help="Topology of the neural network.", default=1)
-    create_parser.add_argument("-lr", type=float, help="Learning rate.", default=1e-3)
+    create_parser.add_argument("-lr", type=float, help="Learning rate.", default=1e-2)
     create_parser.add_argument("-capacity", type=int, help="Capacity of the replay memory.", default=10000)
     create_parser.add_argument("-batch", type=int, help="Batch size.", default=64)
     create_parser.add_argument("-tau", type=float, help="Inverse of the learn step needed between two update of the target network.", default=1e-5)
