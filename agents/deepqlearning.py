@@ -30,13 +30,13 @@ class DeepQLearningAgent(BaseAgent):
         n = len(self.transform_state(dummie_state).squeeze(0))
 
         self.dqn = DQN(n)
-        self.target_dqn = DQN(n)
+        self._target_dqn = DQN(n)
 
         self.optimizer = torch.optim.Adam(self.dqn.parameters(), lr=self.lr, amsgrad=True)
         self.criterion = torch.nn.SmoothL1Loss()
     
     def transform_state(self, state):
-        #### Write your code here for task  4
+        #### Write your code here for task
         p, op, b, vb = state
         s = (p, b[0], p-b[1], vb[0], vb[1])
         ####
@@ -85,13 +85,13 @@ class DeepQLearningAgent(BaseAgent):
         ####
     
     def update_target(self):
-        target_net_state_dict = self.target_dqn.state_dict()
+        target_net_state_dict = self._target_dqn.state_dict()
         dqn_net_state_dict = self.dqn.state_dict()
 
         for key in dqn_net_state_dict:
             target_net_state_dict[key] = dqn_net_state_dict[key]*self.tau + target_net_state_dict[key]*(1-self.tau)
         
-        self.target_dqn.load_state_dict(target_net_state_dict)
+        self._target_dqn.load_state_dict(target_net_state_dict)
     
     def get_loss(self):
         #### Write your code here for task
@@ -107,7 +107,7 @@ class DeepQLearningAgent(BaseAgent):
         qvlues = out.gather(1, action.unsqueeze(1)).squeeze(1)
 
         with torch.no_grad():
-            expected_qvalues = self.gamma * self.target_dqn(next_state).max(1).values * (1 - done) + reward
+            expected_qvalues = self.gamma * self._target_dqn(next_state).max(1).values * (1 - done) + reward
 
         loss = self.criterion(qvlues, expected_qvalues)
 

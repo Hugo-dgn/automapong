@@ -219,7 +219,7 @@ def main():
     create_parser.add_argument("-lr", type=float, help="Learning rate.", default=1e-3)
     create_parser.add_argument("-capacity", type=int, help="Capacity of the replay memory.", default=10000)
     create_parser.add_argument("-batch", type=int, help="Batch size.", default=1000)
-    create_parser.add_argument("-tau", type=float, help="Inverse of the step needed between two update of the target network.", default=0.01)
+    create_parser.add_argument("-tau", type=float, help="Inverse of the learn step needed between two update of the target network.", default=0.005)
     create_parser.add_argument("-skip", type=int, help="Step skip between two learning step.", default=100)
     
     create_parser.add_argument("-d", type=float, help="Discretisation step.", default=0.01)

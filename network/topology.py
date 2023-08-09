@@ -10,9 +10,9 @@ class DQN_1(nn.Module):
         self.network = nn.Sequential(
             nn.Linear(n_inputs, 32),
             nn.ReLU(),
-            nn.Linear(32, 1024),
+            nn.Linear(32, 64),
             nn.ReLU(),
-            nn.Linear(1024, 32),
+            nn.Linear(64, 32),
             nn.ReLU(),
             nn.Linear(32, 3)
         )
