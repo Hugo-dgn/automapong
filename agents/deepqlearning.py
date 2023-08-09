@@ -32,6 +32,9 @@ class DeepQLearningAgent(BaseAgent):
         self.dqn = dqn(n)
         self._target_dqn = dqn(n)
 
+        self.dqn.to(device)
+        self._target_dqn.to(device)
+
         self.optimizer = torch.optim.Adam(self.dqn.parameters(), lr=self.lr, amsgrad=True)
         self.criterion = torch.nn.SmoothL1Loss()
     
