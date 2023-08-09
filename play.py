@@ -23,3 +23,23 @@ def play(agent1, agent2):
     ####
 
     return env.get_results()
+
+
+def benchmark(agent1, agent2, episode):
+    pass
+    ####write yout code here for task 3
+    env = pong.Env()
+    state1, state2 = env.reset()
+
+    for e in range(episode):
+        action1 = agent1.act(state1, training=False)  # action est dans {-1, 0, 1}
+        action2 = agent2.act(state2, training=False)  # action est dans {-1, 0, 1}
+
+        # Effectuer une étape du jeu
+        state1, state2, _, _, done = env.step(action1, action2) # on obtient les nouveaux états
+        
+        if done:
+            state1, state2 = env.reset()
+    ####
+
+    return env.get_results()

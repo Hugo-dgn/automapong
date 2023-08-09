@@ -3,23 +3,23 @@ import numpy as np
 from agents.super import BaseAgent
 
 class QLearningAgent(BaseAgent):
-    def __init__(self, name, lr, gamma, eps, end_eps, d_step, eps_decay):
+    def __init__(self, name, lr, gamma, eps, eeps, d, edecay):
         BaseAgent.__init__(self, name)
         self.Q = {}
 
         self.lr = lr
         self.gamma = gamma
         self.eps = eps
-        self.end_eps = end_eps
-        self.eps_decay = eps_decay
+        self.eeps = eeps
+        self.edecay = edecay
 
-        self.d_step = d_step
+        self.d = d
 
         self.step = 0
     
     def discretize(self, s):
         #### Write your code here for task 9
-        d_s = tuple([int(x/self.d_step)*self.d_step for x in s])
+        d_s = tuple([int(x/self.d)*self.d for x in s])
 
         return d_s
         ####
@@ -64,7 +64,7 @@ class QLearningAgent(BaseAgent):
 
         #### Write your code here for task 9
 
-        if training and np.random.random() < (self.eps - self.end_eps) * np.exp(-self.eps_decay * self.step) + self.end_eps:
+        if training and np.random.random() < (self.eps - self.eeps) * np.exp(-self.edecay * self.step) + self.eeps:
             return np.random.choice([-1, 0, 1])
         
         ####

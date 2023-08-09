@@ -10,7 +10,7 @@ from agents.super import BaseAgent
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 class DeepQLearningAgent(BaseAgent):
-    def __init__(self, name, DQN, lr, gamma, eps, end_eps, eps_decay, capacity, batch, tau, skip):
+    def __init__(self, name, dqn, lr, gamma, eps, eeps, edecay, capacity, batch, tau, skip):
         BaseAgent.__init__(self, name)
         self.lr = lr
         self.memory = ReplayMemory(capacity)
@@ -20,8 +20,8 @@ class DeepQLearningAgent(BaseAgent):
 
         self.gamma = gamma
         self.eps = eps
-        self.end_eps = end_eps
-        self.eps_decay = eps_decay
+        self.eeps = eeps
+        self.edecay = edecay
 
         self.step = 0
 
@@ -29,8 +29,8 @@ class DeepQLearningAgent(BaseAgent):
 
         n = len(self.transform_state(dummie_state).squeeze(0))
 
-        self.dqn = DQN(n)
-        self._target_dqn = DQN(n)
+        self.dqn = dqn(n)
+        self._target_dqn = dqn(n)
 
         self.optimizer = torch.optim.Adam(self.dqn.parameters(), lr=self.lr, amsgrad=True)
         self.criterion = torch.nn.SmoothL1Loss()
@@ -70,7 +70,7 @@ class DeepQLearningAgent(BaseAgent):
 
         state = self.transform_state(state) # transform the state in something usable
 
-        if training and np.random.random() < (self.eps - self.end_eps) * np.exp(-self.eps_decay * self.step) + self.end_eps:
+        if training and np.random.random() < (self.eps - self.eeps) * np.exp(-self.edecay * self.step) + self.eeps:
             return np.random.choice([-1, 0, 1])
         
         #### Write your code here for task

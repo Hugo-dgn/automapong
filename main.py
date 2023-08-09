@@ -18,6 +18,7 @@ import network
 
 from play import play
 from train import train
+from grid import grid_schearch
 
 def get_agent(name_agent):
     if name_agent == "human1":
@@ -105,11 +106,11 @@ def create(args):
         print(f"Creating agent {args.agent}.")
 
     if args.type == "ql":
-        agent = agents.QLearningAgent(args.agent, lr=args.lr, gamma=args.gamma, eps=args.eps, end_eps=args.eeps, d_step=args.d, eps_decay=args.edecay)
+        agent = agents.QLearningAgent(args.agent, lr=args.lr, gamma=args.gamma, eps=args.eps, eeps=args.eeps, d=args.d, edecay=args.edecay)
         agent.save()
     elif args.type == "dql":
         DQN = network.get_topology(args.dqn)
-        agent = agents.DeepQLearningAgent(args.agent, DQN=DQN, lr=args.lr, gamma=args.gamma, eps=args.eps, end_eps=args.eeps, eps_decay=args.edecay, capacity=args.capacity, batch=args.batch, tau=args.tau, skip=args.skip)
+        agent = agents.DeepQLearningAgent(args.agent, dqn=DQN, lr=args.lr, gamma=args.gamma, eps=args.eps, eeps=args.eeps, edecay=args.edecay, capacity=args.capacity, batch=args.batch, tau=args.tau, skip=args.skip)
         agent.save()
 
 def reward(args):
@@ -188,6 +189,21 @@ def info(args):
         if attr [0] != "_" and not isinstance(value, (list, tuple, dict)):
             print(f"{attr} = {value}")
 
+def grid(args):
+
+    if args.GridAgent == "dql":
+        GridAgent = agents.DeepQLearningAgent
+    elif args.GridAgent == "ql":
+        GridAgent = agents.QLearningAgent
+    
+    Benchmarkagent = get_agent(args.BenchmarkAgent)
+
+    args.dqn = tuple([network.get_topology(i) for i in args.dqn])
+
+    kwards = {key: value for key, value in vars(args).items() if key not in ["GridAgent", "BenchmarkAgent", "train_episode", "benchmark_episode"]}
+
+    grid_schearch(GridAgent, Benchmarkagent, args.train_episode, args.benchmark_episode, **kwards)
+
 
 
 def main():
@@ -235,6 +251,30 @@ def main():
     info_parser.add_argument("agent", help="name of the agent")
     info_parser.set_defaults(func=info)
     
+    grid_parser = subparsers.add_parser("grid", help="Does a grid schearch for hyperparameters.")
+    grid_parser.add_argument("GridAgent", help="Name of the agent to do the grid schearch on.")
+    grid_parser.add_argument("BenchmarkAgent", help="Name of the agent to do the benchmark.")
+    grid_parser.add_argument("train_episode", type=int, help="Number of train_episode.")
+    grid_parser.add_argument("benchmark_episode", type=int, help="Number of benchmark_episode.")
+
+    grid_parser.add_argument("-name", type=tuple, help="name of the agent to create", default=("noname",))
+
+    grid_parser.add_argument("-gamma", type=tuple, help="The Bellman's equation gamma.", default=(0.9,))
+    grid_parser.add_argument("-eps", type=tuple, help="Epsilon parameter for epsilon greedy algorithm.", default=(1,))
+    grid_parser.add_argument("-eeps", type=tuple, help="End epsilon parameter for epsilon greedy algorithm.", default=(0,))
+    grid_parser.add_argument("-edecay", type=tuple, help="Exponential decay parameter for epsilon greedy algorithm.", default=(1e-3,))
+
+    grid_parser.add_argument("-dqn", type=tuple, help="Topology of the neural network.", default=(1,))
+    grid_parser.add_argument("-lr", type=tuple, help="Learning rate.", default=(1e-2,))
+    grid_parser.add_argument("-capacity", type=tuple, help="Capacity of the replay memory.", default=(10000,))
+    grid_parser.add_argument("-batch", type=tuple, help="Batch size.", default=(512,))
+    grid_parser.add_argument("-tau", type=tuple, help="Inverse of the learn step needed between two update of the target network.", default=(1e-2,))
+    grid_parser.add_argument("-skip", type=tuple, help="Step skip between two learning step.", default=(64,))
+    
+    grid_parser.add_argument("-d", type=tuple, help="Discretisation step.", default=(0.01,))
+
+    grid_parser.set_defaults(func=grid)
+
     args = parser.parse_args()
     
     if hasattr(args, 'func'):
