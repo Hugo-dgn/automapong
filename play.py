@@ -1,5 +1,6 @@
+from tqdm.auto import tqdm
+
 import pong
-import tqdm
 
 def play(agent1, agent2):
     pass
