@@ -1,7 +1,7 @@
 #### learning Parameters ####
 
 touch_reward = 1 #reward given each time the player touches the ball
-op_touch_reward = -1
+op_touch_reward = -0.5
 win_reward = 10 #reward given when the player won
 loss_reward = -10 #reward given when the player lost
 skip = 1 # agent makes a decision each skip step

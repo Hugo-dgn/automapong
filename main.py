@@ -212,13 +212,13 @@ def main():
     create_parser.add_argument("-alpha", type=float, help="Learning factor.", default=0.0001)
     create_parser.add_argument("-gamma", type=float, help="The Bellman's equation gamma.", default=0.9)
     create_parser.add_argument("-eps", type=float, help="Epsilon parameter for epsilon greedy algorithm.", default=1)
-    create_parser.add_argument("-eeps", type=float, help="End epsilon parameter for epsilon greedy algorithm.", default=0.01)
+    create_parser.add_argument("-eeps", type=float, help="End epsilon parameter for epsilon greedy algorithm.", default=0)
     create_parser.add_argument("-edecay", type=float, help="Exponential decay parameter for epsilon greedy algorithm.", default=1e-4)
 
     create_parser.add_argument("-dqn", type=int, help="Topology of the neural network.", default=1)
     create_parser.add_argument("-lr", type=float, help="Learning rate.", default=1e-2)
     create_parser.add_argument("-capacity", type=int, help="Capacity of the replay memory.", default=10000)
-    create_parser.add_argument("-batch", type=int, help="Batch size.", default=64)
+    create_parser.add_argument("-batch", type=int, help="Batch size.", default=1000)
     create_parser.add_argument("-tau", type=float, help="Inverse of the learn step needed between two update of the target network.", default=1e-5)
     create_parser.add_argument("-skip", type=int, help="Step skip between two learning step.", default=100)
     
