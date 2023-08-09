@@ -202,6 +202,9 @@ def grid(args):
 
     kwards = {key: value for key, value in vars(args).items() if key not in ["GridAgent", "BenchmarkAgent", "train_episode", "benchmark_episode"]}
 
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    print(f"Trainig using {device}")
+
     grid_schearch(GridAgent, Benchmarkagent, args.train_episode, args.benchmark_episode, **kwards)
 
 
