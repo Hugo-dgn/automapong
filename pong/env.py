@@ -52,6 +52,9 @@ class Env:
 
         self.win_history = []
 
+        self.reward1 = 0
+        self.reward2 = 0
+
         self.skip = skip
 
     def get_state(self):
@@ -84,6 +87,9 @@ class Env:
         if touche == 2:
             reward2 += touch_reward
             reward1 += op_touch_reward
+        
+        self.reward1 += reward1
+        self.reward2 += reward2
 
         return reward1, reward2
 

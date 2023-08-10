@@ -39,10 +39,7 @@ def grid_schearch(agentConstructor, benchmarkAgent, train_episode, benchmark_epi
 
         train(agent, benchmarkAgent, train_episode)
 
-        results = benchmark(agent, benchmarkAgent, benchmark_episode)
-
-        agent_fitness = 100*(results[1] - results[2])/benchmark_episode
-        print(f"fitness : {agent_fitness}")
+        agent_fitness = 100*benchmark(agent, benchmarkAgent, benchmark_episode)
 
         fitness.append(agent_fitness)
 
