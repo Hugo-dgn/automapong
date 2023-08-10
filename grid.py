@@ -24,9 +24,8 @@ def grid_schearch(agentConstructor, benchmarkAgent, train_episode, benchmark_epi
 
     randomagent = RandomAgent(name="noname")
 
-    results = benchmark(randomagent, benchmarkAgent, benchmark_episode)
+    randomagent_fitness = 100*benchmark(randomagent, benchmarkAgent, benchmark_episode)
 
-    randomagent_fitness = 100*(results[1] - results[2])/benchmark_episode
     print(f"Random agent fitness : {randomagent_fitness}")
 
 
