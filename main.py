@@ -48,6 +48,12 @@ def get_agent(name_agent):
             pass
         agent.save = _save
         return agent
+    elif name_agent == "strong":
+        agent = agents.StrongAgent("strong")
+        def _save():
+            pass
+        agent.save = _save
+        return agent
     else:
         return agents.load(name_agent)
 

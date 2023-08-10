@@ -4,7 +4,7 @@ from agents.super import BaseAgent
 from agents.qlearning import QLearningAgent
 from agents.deepqlearning import DeepQLearningAgent
 from agents.random import RandomAgent
-
+from agents.strongagent import StrongAgent
 
 import torch as _torch
 

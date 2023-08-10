@@ -1,5 +1,7 @@
 from tqdm.auto import tqdm
 
+import time
+
 import pong
 
 def play(agent1, agent2):
@@ -48,4 +50,4 @@ def benchmark(agent1, agent2, episode):
                 state1, state2 = env.reset()
     ####
 
-    return env.reward1/step
+    return 100*env.reward1/step

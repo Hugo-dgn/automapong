@@ -27,7 +27,7 @@ inverse_x = np.array([[-1, 0],
                       [0, 1]])
 
 #flip_x - position: provides the axial symmetry
-flip_x = np.array([config["lenght_win"], 0])
+flip_x = np.array([1, 0])
 
 normalize_b = np.array([1/config["lenght_win"] , 1])
 
@@ -63,7 +63,7 @@ class Env:
         normalized_b = normalize_b * self.game.b
 
         state1 = (self.game.p1, self.game.p2, tuple(normalized_b), tuple(normalized_vb))
-        state2 = (self.game.p2, self.game.p1, tuple(flip_x-inverse_y@normalized_b), tuple(inverse_x@normalized_vb))
+        state2 = (self.game.p2, self.game.p1, tuple(flip_x+inverse_x@normalized_b), tuple(inverse_x@normalized_vb))
 
         return state1, state2
     
