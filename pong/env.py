@@ -112,17 +112,13 @@ class Env:
 
     def reset(self):
         win = self.game.win()
-        if win == 0:
-            direction = 0
-        elif win == 1:
-            direction = 1
+        if win == 1:
             self.win_history.append(1)
         elif win == 2:
-            direction = -1
             self.win_history.append(2)
 
         self.game.reset()
-        random_matrix = random_start_matrix(direction)
+        random_matrix = random_start_matrix(0)
         self.game.vb = random_matrix @ self.game.vb
         return self.get_state()
 
