@@ -36,4 +36,4 @@ def grid_schearch(agentConstructor, benchmarkAgent, train_episode, benchmark_epi
         fitness.append(agent_fitness)
 
     
-    print(f"\nBest parameters found : {keys_combination[np.argmax(fitness)]} with fitness {max(fitness)}.")
+    print(f"\nBest parameters found :\n{' '.join([f'-{key} {value}' for (key, value) in keys_combination[np.argmax(fitness)].items()])}\nwith fitness {max(fitness)}.")
