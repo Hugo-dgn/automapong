@@ -40,6 +40,8 @@ def grid_schearch(agentConstructor, benchmarkAgent, train_episode, benchmark_epi
 
         agent_fitness = 100*benchmark(agent, benchmarkAgent, benchmark_episode)
 
+        print(f"fitness = {agent_fitness}")
+
         fitness.append(agent_fitness)
 
     
