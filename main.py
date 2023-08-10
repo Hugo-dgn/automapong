@@ -93,15 +93,10 @@ def _train(args):
                     continue
                 print(f"\n{agent1.name} vs {agent2.name}")
 
-                results = train(agent1, agent2, args.episode)
+                mean_reward1, mean_reward2 = train(agent1, agent2, args.episode)
 
-                for agent, win in results.items():
-                    if agent == 1:
-                        print(f"win for {agent1.name} = {win}")
-                    if agent == 2:
-                        print(f"win for {agent2.name} = {win}")
-                    elif agent == 0:
-                        print(f"draws = {win}")
+                print(f"mean reward for {agent1.name} = {mean_reward1}")
+                print(f"mean reward for {agent2.name} = {mean_reward2}")
 
                 if agent1.name == "simple" :
                     print(f"Saving agent {agent2.name}.")
