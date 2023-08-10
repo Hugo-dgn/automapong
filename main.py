@@ -26,7 +26,7 @@ from grid import grid_schearch
 gamma = 0.9
 eps = 1
 eeps = 0
-edecay = 0.001
+edecay = 0.01
 dqn = 1
 lr = 0.001
 capacity = 10_000
