@@ -3,6 +3,8 @@ import numpy as np
 from itertools import product
 import inspect
 
+from agents import RandomAgent
+
 from train import train
 from play import benchmark
 
@@ -19,6 +21,15 @@ def grid_schearch(agentConstructor, benchmarkAgent, train_episode, benchmark_epi
     keys_combination = [{key : x for (key, x) in zip(list(parameters.keys()), combination)} for combination in combinations]
 
     fitness = []
+
+    randomagent = RandomAgent(name="noname")
+
+    results = benchmark(randomagent, benchmarkAgent, benchmark_episode)
+
+    randomagent_fitness = 100*(results[1] - results[2])/benchmark_episode
+    print(f"Random agent fitness : {randomagent_fitness}")
+
+
 
     for i, hyperparams in enumerate(keys_combination):
 

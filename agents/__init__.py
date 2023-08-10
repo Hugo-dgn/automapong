@@ -3,6 +3,7 @@ from agents.simple import SimpleAgent
 from agents.super import BaseAgent
 from agents.qlearning import QLearningAgent
 from agents.deepqlearning import DeepQLearningAgent
+from agents.random import RandomAgent
 
 
 import torch as _torch
