@@ -20,6 +20,23 @@ from play import play
 from train import train
 from grid import grid_schearch
 
+
+#### Default parameters for agent creation
+
+gamma = 0.9
+eps = 1
+eeps = 0
+edecay = 0.001
+dqn = 1
+lr = 0.001
+capacity = 10_000
+batch = 512
+tau = 0.01
+skip = 5
+d = 0.01
+
+####
+
 def get_agent(name_agent):
     if name_agent == "human1":
         return agents.HumanAgent(player=1)
@@ -228,19 +245,19 @@ def main():
     create_parser.add_argument("type", help="name of the agent to create", choices=["dql", "ql"])
     create_parser.add_argument("agent", help="name of the agent to create")
 
-    create_parser.add_argument("-gamma", type=float, help="The Bellman's equation gamma.", default=0.9)
-    create_parser.add_argument("-eps", type=float, help="Epsilon parameter for epsilon greedy algorithm.", default=1)
-    create_parser.add_argument("-eeps", type=float, help="End epsilon parameter for epsilon greedy algorithm.", default=0)
-    create_parser.add_argument("-edecay", type=float, help="Exponential decay parameter for epsilon greedy algorithm.", default=1e-3)
+    create_parser.add_argument("-gamma", type=float, help="The Bellman's equation gamma.", default=gamma)
+    create_parser.add_argument("-eps", type=float, help="Epsilon parameter for epsilon greedy algorithm.", default=eps)
+    create_parser.add_argument("-eeps", type=float, help="End epsilon parameter for epsilon greedy algorithm.", default=eeps)
+    create_parser.add_argument("-edecay", type=float, help="Exponential decay parameter for epsilon greedy algorithm.", default=edecay)
 
-    create_parser.add_argument("-dqn", type=int, help="Topology of the neural network.", default=1)
-    create_parser.add_argument("-lr", type=float, help="Learning rate.", default=1e-3)
-    create_parser.add_argument("-capacity", type=int, help="Capacity of the replay memory.", default=10000)
-    create_parser.add_argument("-batch", type=int, help="Batch size.", default=512)
-    create_parser.add_argument("-tau", type=float, help="Inverse of the learn step needed between two update of the target network.", default=1e-2)
-    create_parser.add_argument("-skip", type=int, help="Step skip between two learning step.", default=64)
+    create_parser.add_argument("-dqn", type=int, help="Topology of the neural network.", default=dqn)
+    create_parser.add_argument("-lr", type=float, help="Learning rate.", default=lr)
+    create_parser.add_argument("-capacity", type=int, help="Capacity of the replay memory.", default=capacity)
+    create_parser.add_argument("-batch", type=int, help="Batch size.", default=batch)
+    create_parser.add_argument("-tau", type=float, help="Inverse of the learn step needed between two update of the target network.", default=tau)
+    create_parser.add_argument("-skip", type=int, help="Step skip between two learning step.", default=skip)
     
-    create_parser.add_argument("-d", type=float, help="Discretisation step.", default=0.01)
+    create_parser.add_argument("-d", type=float, help="Discretisation step.", default=d)
 
     create_parser.set_defaults(func=create)
 
@@ -262,19 +279,19 @@ def main():
 
     grid_parser.add_argument("-name", nargs="*", type=str, help="name of the agent to create", default=("noname",))
 
-    grid_parser.add_argument("-gamma", nargs="*", type=float, help="The Bellman's equation gamma.", default=(0.9,))
-    grid_parser.add_argument("-eps", nargs="*", type=float, help="Epsilon parameter for epsilon greedy algorithm.", default=(1,))
-    grid_parser.add_argument("-eeps", nargs="*", type=float, help="End epsilon parameter for epsilon greedy algorithm.", default=(0,))
-    grid_parser.add_argument("-edecay", nargs="*", type=float, help="Exponential decay parameter for epsilon greedy algorithm.", default=(1e-3,))
+    grid_parser.add_argument("-gamma", nargs="*", type=float, help="The Bellman's equation gamma.", default=[gamma]])
+    grid_parser.add_argument("-eps", nargs="*", type=float, help="Epsilon parameter for epsilon greedy algorithm.", default=[eps])
+    grid_parser.add_argument("-eeps", nargs="*", type=float, help="End epsilon parameter for epsilon greedy algorithm.", default=[eeps])
+    grid_parser.add_argument("-edecay", nargs="*", type=float, help="Exponential decay parameter for epsilon greedy algorithm.", default=[edecay])
 
-    grid_parser.add_argument("-dqn", nargs="*", type=int, help="Topology of the neural network.", default=(1,))
-    grid_parser.add_argument("-lr", nargs="*",type=float, help="Learning rate.", default=(1e-3,))
-    grid_parser.add_argument("-capacity", nargs="*", type=int, help="Capacity of the replay memory.", default=(10000,))
-    grid_parser.add_argument("-batch", nargs="*", type=int, help="Batch size.", default=(512,))
-    grid_parser.add_argument("-tau", nargs="*", type=float, help="Inverse of the learn step needed between two update of the target network.", default=(1e-2,))
-    grid_parser.add_argument("-skip", nargs="*", type=int, help="Step skip between two learning step.", default=(64,))
+    grid_parser.add_argument("-dqn", nargs="*", type=int, help="Topology of the neural network.", default=[dqn])
+    grid_parser.add_argument("-lr", nargs="*",type=float, help="Learning rate.", default=[lr])
+    grid_parser.add_argument("-capacity", nargs="*", type=int, help="Capacity of the replay memory.", default=[capacity])
+    grid_parser.add_argument("-batch", nargs="*", type=int, help="Batch size.", default=[batch])
+    grid_parser.add_argument("-tau", nargs="*", type=float, help="Inverse of the learn step needed between two update of the target network.", default=[tau])
+    grid_parser.add_argument("-skip", nargs="*", type=int, help="Step skip between two learning step.", default=[skip])
     
-    grid_parser.add_argument("-d", nargs="*", type=float, help="Discretisation step.", default=(0.01,))
+    grid_parser.add_argument("-d", nargs="*", type=float, help="Discretisation step.", default=[d])
 
     grid_parser.set_defaults(func=grid)
 
