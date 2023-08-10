@@ -231,7 +231,7 @@ def main():
     create_parser.add_argument("-gamma", type=float, help="The Bellman's equation gamma.", default=0.9)
     create_parser.add_argument("-eps", type=float, help="Epsilon parameter for epsilon greedy algorithm.", default=1)
     create_parser.add_argument("-eeps", type=float, help="End epsilon parameter for epsilon greedy algorithm.", default=0)
-    create_parser.add_argument("-edecay", type=float, help="Exponential decay parameter for epsilon greedy algorithm.", default=1e-4)
+    create_parser.add_argument("-edecay", type=float, help="Exponential decay parameter for epsilon greedy algorithm.", default=1e-3)
 
     create_parser.add_argument("-dqn", type=int, help="Topology of the neural network.", default=1)
     create_parser.add_argument("-lr", type=float, help="Learning rate.", default=1e-3)
@@ -265,7 +265,7 @@ def main():
     grid_parser.add_argument("-gamma", nargs="*", type=float, help="The Bellman's equation gamma.", default=(0.9,))
     grid_parser.add_argument("-eps", nargs="*", type=float, help="Epsilon parameter for epsilon greedy algorithm.", default=(1,))
     grid_parser.add_argument("-eeps", nargs="*", type=float, help="End epsilon parameter for epsilon greedy algorithm.", default=(0,))
-    grid_parser.add_argument("-edecay", nargs="*", type=float, help="Exponential decay parameter for epsilon greedy algorithm.", default=(1e-4,))
+    grid_parser.add_argument("-edecay", nargs="*", type=float, help="Exponential decay parameter for epsilon greedy algorithm.", default=(1e-3,))
 
     grid_parser.add_argument("-dqn", nargs="*", type=int, help="Topology of the neural network.", default=(1,))
     grid_parser.add_argument("-lr", nargs="*",type=float, help="Learning rate.", default=(1e-3,))
