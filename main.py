@@ -95,8 +95,8 @@ def _train(args):
 
                 mean_reward1, mean_reward2 = train(agent1, agent2, args.episode)
 
-                print(f"mean reward for {agent1.name} = {mean_reward1}")
-                print(f"mean reward for {agent2.name} = {mean_reward2}")
+                print(f"mean reward for {agent1.name} : {mean_reward1}")
+                print(f"mean reward for {agent2.name} : {mean_reward2}")
 
                 if agent1.name == "simple" :
                     print(f"Saving agent {agent2.name}.")
