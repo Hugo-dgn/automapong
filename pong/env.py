@@ -87,7 +87,7 @@ class Env:
 
         return reward1, reward2
 
-    def step(self, action1, action2, dt=0.01):
+    def step(self, action1, action2, dt=0.1):
         reward1 = 0
         reward2 = 0
 

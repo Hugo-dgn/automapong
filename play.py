@@ -18,7 +18,7 @@ def play(agent1, agent2):
 
         # Effectuer une étape du jeu
         state1, state2, _, _, done = env.step(action1, action2, dt) # on obtient les nouveaux états
-        
+
         if done:
             state1, state2 = env.reset()
     ####
