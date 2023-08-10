@@ -22,7 +22,7 @@ def grid_schearch(agentConstructor, benchmarkAgent, train_episode, benchmark_epi
 
     for i, hyperparams in enumerate(keys_combination):
 
-        print(f"\ntrying hyperparameters : {' | '.join([f'{key} ; {value} ' for (key, value) in list(hyperparams.items())])}")
+        print(f"\ntrying hyperparameters : {' | '.join([f'{key} : {value} ' for (key, value) in list(hyperparams.items())])}")
 
         agent = agentConstructor(**hyperparams)
 
