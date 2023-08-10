@@ -279,7 +279,7 @@ def main():
 
     grid_parser.add_argument("-name", nargs="*", type=str, help="name of the agent to create", default=("noname",))
 
-    grid_parser.add_argument("-gamma", nargs="*", type=float, help="The Bellman's equation gamma.", default=[gamma]])
+    grid_parser.add_argument("-gamma", nargs="*", type=float, help="The Bellman's equation gamma.", default=[gamma])
     grid_parser.add_argument("-eps", nargs="*", type=float, help="Epsilon parameter for epsilon greedy algorithm.", default=[eps])
     grid_parser.add_argument("-eeps", nargs="*", type=float, help="End epsilon parameter for epsilon greedy algorithm.", default=[eeps])
     grid_parser.add_argument("-edecay", nargs="*", type=float, help="Exponential decay parameter for epsilon greedy algorithm.", default=[edecay])
