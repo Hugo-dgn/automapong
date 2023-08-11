@@ -46,7 +46,7 @@ class DeepQLearningAgent(BaseAgent):
     def transform_state(self, state):
         #### Write your code here for task
         p, op, b, vb = state
-        s = (p, op, b[0], b[1], vb[0], vb[1])
+        s = (p, b[0], b[1], vb[0], vb[1])
         ####
 
         return torch.tensor(s, dtype=torch.float32, device=device).unsqueeze(0)
