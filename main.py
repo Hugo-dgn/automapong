@@ -77,7 +77,7 @@ def _train(args):
                     continue
                 print(f"\n{agent1.name} vs {agent2.name}")
 
-                mean_reward1, mean_reward2, resutlts = train(agent1, agent2, args.episode)
+                mean_reward1, mean_reward2, resutlts = train(agent1, agent2, args.episode, args.dt)
 
                 print(f"mean reward for {agent1.name} : {mean_reward1}")
                 print(f"mean reward for {agent2.name} : {mean_reward2}")
