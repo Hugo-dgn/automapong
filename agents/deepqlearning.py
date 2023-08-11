@@ -106,17 +106,6 @@ class DeepQLearningAgent(BaseAgent):
         
         self._target_dqn.load_state_dict(target_net_state_dict)
     
-    def benchmark_update_target(self):
-        current = self.step * self.tau
-        previous = (self.step-1) * self.tau
-
-        if int(current) > int(previous):
-            benchmarkagent = get_agent(self.benchmarkagent)
-            new_benchmark = benchmark(self, benchmarkagent, self.benchmarkepisode, verbose=False)
-            if new_benchmark > self.benchmark:
-                self.benchmark = new_benchmark
-                self._target_dqn.load_state_dict(self.dqn.state_dict())
-    
     def get_loss(self):
         #### Write your code here for task
         transition = self.memory.sample(self.batch)
