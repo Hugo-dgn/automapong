@@ -28,14 +28,14 @@ def play(agent1, agent2):
     return env.get_results()
 
 
-def benchmark(agent1, agent2, episode):
+def benchmark(agent1, agent2, episode, verbose=True):
     ####write yout code here for task 3
     env = pong.Env()
     state1, state2 = env.reset()
 
     step = 0
 
-    for e in tqdm(range(episode), desc="playing"):
+    for e in tqdm(range(episode), desc="playing") if verbose else range(episode):
         done = False
         while not done:
             step += 1

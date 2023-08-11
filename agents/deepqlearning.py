@@ -1,16 +1,21 @@
 import random
+import contextlib
 
 from collections import deque
 import numpy as np
 
 import torch
 
+from utils import get_agent
+
 from agents.super import BaseAgent
+
+from play import benchmark
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 class DeepQLearningAgent(BaseAgent):
-    def __init__(self, name, dqn, lr, gamma, eps, eeps, edecay, capacity, batch, tau, skip):
+    def __init__(self, name, dqn, lr, gamma, eps, eeps, edecay, capacity, batch, tau, skip, benchmarkagent, benchmarkepisode):
         BaseAgent.__init__(self, name)
         self.lr = lr
         self.memory = ReplayMemory(capacity)
@@ -35,6 +40,11 @@ class DeepQLearningAgent(BaseAgent):
         self.dqn.to(device)
         self._target_dqn.to(device)
 
+        self.benchmark = 0
+        self.benchmarkagent = benchmarkagent
+        self.benchmarkepisode = benchmarkepisode
+        
+
         self.optimizer = torch.optim.Adam(self.dqn.parameters(), lr=self.lr, amsgrad=True)
         self.criterion = torch.nn.SmoothL1Loss()
     
@@ -58,7 +68,7 @@ class DeepQLearningAgent(BaseAgent):
         self.memory.push(state, action, next_state, reward, done)
 
         if len(self.memory) >= self.batch and self.step % self.skip == 0:
-            self.update_target()
+            self.benchmark_update_target()
             loss = self.get_loss()
 
             self.optimizer.zero_grad()
@@ -87,7 +97,7 @@ class DeepQLearningAgent(BaseAgent):
     
         ####
     
-    def update_target(self):
+    def soft_update_target(self):
         target_net_state_dict = self._target_dqn.state_dict()
         dqn_net_state_dict = self.dqn.state_dict()
 
@@ -95,6 +105,17 @@ class DeepQLearningAgent(BaseAgent):
             target_net_state_dict[key] = dqn_net_state_dict[key]*self.tau + target_net_state_dict[key]*(1-self.tau)
         
         self._target_dqn.load_state_dict(target_net_state_dict)
+    
+    def benchmark_update_target(self):
+        current = self.step * self.tau
+        previous = (self.step-1) * self.tau
+
+        if int(current) > int(previous):
+            benchmarkagent = get_agent(self.benchmarkagent)
+            new_benchmark = benchmark(self, benchmarkagent, self.benchmarkepisode, verbose=False)
+            if new_benchmark > self.benchmark:
+                self.benchmark = new_benchmark
+                self._target_dqn.load_state_dict(self.dqn.state_dict())
     
     def get_loss(self):
         #### Write your code here for task
@@ -147,8 +168,6 @@ class ReplayMemory:
 
         return _get_transition(*zip(*sample))
 
-
-    
     def __len__(self):
         return len(self.memory)
 
