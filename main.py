@@ -231,6 +231,7 @@ def main():
     train_parser.add_argument("agents", nargs="+", help="List of agents to train")
     train_parser.add_argument("-e", "--episode", type=int, help="Number of episode for training.", default=10_000)
     train_parser.add_argument("-r", "--round", type=int, help="Number of round for training.", default=1)
+    train_parser.add_argument("-dt", type=float, help="Time stamp for Euler integration.", default=0.1)
     train_parser.set_defaults(func=_train)
     
     create_parser = subparsers.add_parser("create", help="Create an agent")
