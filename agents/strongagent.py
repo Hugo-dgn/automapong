@@ -37,4 +37,4 @@ class StrongAgent(BaseAgent):
         else:
             noise = 0
 
-        return np.sign(p-target+noise)
+        return np.sign(p-target)

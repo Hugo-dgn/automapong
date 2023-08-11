@@ -30,4 +30,4 @@ def train(agent1, agent2, episode):
                 state1, state2 = env.reset()
     ####
 
-    return env.reward1/step, env.reward2/step
+    return env.reward1/step, env.reward2/step, env.get_results()
