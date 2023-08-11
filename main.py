@@ -196,7 +196,8 @@ def grid(args):
     elif args.GridAgent == "ql":
         GridAgent = agents.QLearningAgent
     
-    Benchmarkagent = get_agent(args.BenchmarkAgent)
+    trainagent = get_agent(args.trainAgent)
+    benchmarkagent = get_agent(args.benchmarkAgent)
 
     args.dqn = tuple([network.get_topology(i) for i in args.dqn])
 
@@ -205,7 +206,7 @@ def grid(args):
     device = "cuda" if torch.cuda.is_available() else "cpu"
     print(f"Trainig using {device}")
 
-    grid_schearch(GridAgent, Benchmarkagent, args.train_episode, args.benchmark_episode, **kwards)
+    grid_schearch(GridAgent, trainagent, benchmarkagent, args.train_episode, args.benchmark_episode, **kwards)
 
 
 
@@ -254,7 +255,8 @@ def main():
     
     grid_parser = subparsers.add_parser("grid", help="Does a grid schearch for hyperparameters.")
     grid_parser.add_argument("GridAgent", help="Name of the agent to do the grid schearch on.")
-    grid_parser.add_argument("BenchmarkAgent", help="Name of the agent to do the benchmark.")
+    grid_parser.add_argument("trainAgent", help="Name of the agent to do the training.")
+    grid_parser.add_argument("benchmarkAgent", help="Name of the agent to do the benchmark.")
     grid_parser.add_argument("train_episode", type=int, help="Number of train_episode.")
     grid_parser.add_argument("benchmark_episode", type=int, help="Number of benchmark_episode.")
 
