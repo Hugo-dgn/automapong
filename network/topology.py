@@ -73,15 +73,15 @@ class DQN_3(nn.Module):
         #### Write your code here for task 12
         self.network = nn.Sequential(
             nn.Linear(n_inputs, 64),
-            nn.ReLU(),
+            nn.PReLU(),
             nn.Linear(64, 256),
-            nn.ReLU(),
+            nn.PReLU(),
             nn.Linear(256, 1024),
-            nn.ReLU(),
+            nn.PReLU(),
             nn.Linear(1024, 256),
-            nn.ReLU(),
+            nn.PReLU(),
             nn.Linear(256, 32),
-            nn.ReLU(),
+            nn.PReLU(),
             nn.Linear(32, 3)
         )
         ####
