@@ -68,7 +68,7 @@ class DeepQLearningAgent(BaseAgent):
         self.memory.push(state, action, next_state, reward, done)
 
         if len(self.memory) >= self.batch and self.step % self.skip == 0:
-            self.benchmark_update_target()
+            self.soft_update_target()
             loss = self.get_loss()
 
             self.optimizer.zero_grad()
