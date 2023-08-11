@@ -31,10 +31,5 @@ class StrongAgent(BaseAgent):
                 target = -target
             else:
                 break
-        
-        if abs(p-target) < config["player_lenght"]/3:
-            noise = config["player_lenght"]*(np.random.random()-1/2)
-        else:
-            noise = 0
 
         return np.sign(p-target)
