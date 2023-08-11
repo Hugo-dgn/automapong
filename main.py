@@ -39,6 +39,8 @@ d = 0.01
 
 ####
 
+do_not_train = ["simple", "strong"]
+
 def _play(args):
     if args.agents[0] == "human":
         args.agents[0] = "human1"
@@ -71,7 +73,7 @@ def _train(args):
         for i, agent1 in enumerate(train_agents):
             for j, agent2 in enumerate(train_agents):
                 
-                if i <= j or (agent1.name == "simple" and agent2.name == "simple"):
+                if i <= j or (agent1.name in do_not_train and agent2.name in do_not_train):
                     continue
                 print(f"\n{agent1.name} vs {agent2.name}")
 
@@ -207,8 +209,6 @@ def grid(args):
     print(f"Trainig using {device}")
 
     grid_schearch(GridAgent, trainagent, benchmarkagent, args.train_episode, args.benchmark_episode, **kwards)
-
-
 
 def main():
     parser = argparse.ArgumentParser(description="Agent Game")
