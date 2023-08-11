@@ -36,8 +36,6 @@ batch = 512
 tau = 0.01
 skip = 5
 d = 0.01
-benchmarkagent = "strong"
-benchmarkepisode = 1000
 
 ####
 
@@ -112,7 +110,7 @@ def create(args):
         agent.save()
     elif args.type == "dql":
         DQN = network.get_topology(args.dqn)
-        agent = agents.DeepQLearningAgent(args.agent, dqn=DQN, lr=args.lr, gamma=args.gamma, eps=args.eps, eeps=args.eeps, edecay=args.edecay, capacity=args.capacity, batch=args.batch, tau=args.tau, skip=args.skip, benchmarkagent=args.benchmarkagent, benchmarkepisode=args.benchmarkepisode)
+        agent = agents.DeepQLearningAgent(args.agent, dqn=DQN, lr=args.lr, gamma=args.gamma, eps=args.eps, eeps=args.eeps, edecay=args.edecay, capacity=args.capacity, batch=args.batch, tau=args.tau, skip=args.skip)
         agent.save()
 
 def reward(args):
@@ -240,8 +238,6 @@ def main():
     create_parser.add_argument("-batch", type=int, help="Batch size.", default=batch)
     create_parser.add_argument("-tau", type=float, help="Inverse of the learn step needed between two update of the target network.", default=tau)
     create_parser.add_argument("-skip", type=int, help="Step skip between two learning step.", default=skip)
-    create_parser.add_argument("-benchmarkagent", type=str, help="Agent used to update target network.", default=benchmarkagent)
-    create_parser.add_argument("-benchmarkepisode", type=int, help="Number of episode to benchmark the target network.", default=benchmarkepisode)
     create_parser.add_argument("-d", type=float, help="Discretisation step.", default=d)
 
     create_parser.set_defaults(func=create)
@@ -274,8 +270,6 @@ def main():
     grid_parser.add_argument("-tau", nargs="*", type=float, help="Inverse of the learn step needed between two update of the target network.", default=[tau])
     grid_parser.add_argument("-skip", nargs="*", type=int, help="Step skip between two learning step.", default=[skip])
     grid_parser.add_argument("-d", nargs="*", type=float, help="Discretisation step.", default=[d])
-    grid_parser.add_argument("-benchmarkagent", nargs="*", type=str, help="Step skip between two learning step.", default=[benchmarkagent])
-    grid_parser.add_argument("-benchmarkepisode", nargs="*", type=int, help="Step skip between two learning step.", default=[benchmarkepisode])
 
     grid_parser.set_defaults(func=grid)
 

@@ -15,7 +15,7 @@ from play import benchmark
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 class DeepQLearningAgent(BaseAgent):
-    def __init__(self, name, dqn, lr, gamma, eps, eeps, edecay, capacity, batch, tau, skip, benchmarkagent, benchmarkepisode):
+    def __init__(self, name, dqn, lr, gamma, eps, eeps, edecay, capacity, batch, tau, skip):
         BaseAgent.__init__(self, name)
         self.lr = lr
         self.memory = ReplayMemory(capacity)
@@ -39,11 +39,6 @@ class DeepQLearningAgent(BaseAgent):
 
         self.dqn.to(device)
         self._target_dqn.to(device)
-
-        self.benchmark = 0
-        self.benchmarkagent = benchmarkagent
-        self.benchmarkepisode = benchmarkepisode
-        
 
         self.optimizer = torch.optim.Adam(self.dqn.parameters(), lr=self.lr, amsgrad=True)
         self.criterion = torch.nn.SmoothL1Loss()
