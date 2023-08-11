@@ -1,6 +1,6 @@
 #### learning Parameters ####
 
-touch_reward = 1 #reward given each time the player touches the ball
+touch_reward = 0 #reward given each time the player touches the ball
 op_touch_reward = 0
 win_reward = 10 #reward given when the player won
 loss_reward = -10 #reward given when the player lost
