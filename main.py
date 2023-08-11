@@ -33,7 +33,7 @@ dqn = 1
 lr = 0.001
 capacity = 10_000
 batch = 512
-tau = 0.01
+tau = 1e-4
 skip = 5
 d = 0.01
 
