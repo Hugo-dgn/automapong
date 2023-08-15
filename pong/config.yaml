@@ -1,6 +1,6 @@
-player_lenght : 0.16
+player_lenght : 0.2
 v_p_std : 0.5
-v_b_std : 1.5
+v_b_std : 1.3
 normal_rebounce_coeff : 0.6
 odd_rebounce_coeff : 1.2
 player_width : 20
