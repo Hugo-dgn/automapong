@@ -1,10 +1,9 @@
 import numpy as np
-import yaml
+import utils
 
 from agents.super import BaseAgent
 
-with open("pong/config.yaml", 'r') as file:
-    config = yaml.load(file, Loader=yaml.FullLoader)
+config = utils.get_config()
 
 class StrongAgent(BaseAgent):
     def __init__(self, name):

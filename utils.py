@@ -1,3 +1,5 @@
+import yaml
+
 import agents
 
 def get_agent(name_agent):
@@ -19,3 +21,8 @@ def get_agent(name_agent):
         return agent
     else:
         return agents.load(name_agent)
+
+def get_config():
+    with open("pong/config.yaml", 'r') as file:
+        config = yaml.load(file, Loader=yaml.FullLoader)
+    return config

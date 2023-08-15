@@ -1,10 +1,9 @@
 import pygame
-import yaml
 
 win_size = 500
 
-with open("pong/config.yaml", 'r') as file:
-    config = yaml.load(file, Loader=yaml.FullLoader)
+import utils
+config = utils.get_config()
 
 
 pygame_objects = {"screen" : None, "clock" : None}

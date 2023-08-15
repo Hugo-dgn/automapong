@@ -12,12 +12,11 @@ skip = 1 # agent makes a decision each skip step
 
 import numpy as np
 import random
-import yaml
 
 from .game import Game
 
-with open("pong/config.yaml", 'r') as file:
-    config = yaml.load(file, Loader=yaml.FullLoader)
+import utils
+config = utils.get_config()
 
 #define matrices to inverse movement along an axis
 inverse_y = np.array([[1, 0],

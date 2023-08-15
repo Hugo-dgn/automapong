@@ -1,8 +1,7 @@
 import numpy as np
-import yaml
 
-with open("pong/config.yaml", 'r') as file:
-    config = yaml.load(file, Loader=yaml.FullLoader)
+import utils
+config = utils.get_config()
 
 inverse_x = np.array([[-1, 0],
                         [0, 1]])

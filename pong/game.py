@@ -1,12 +1,11 @@
 import numpy as np
-import yaml
 
 from .physics import _move_player, _move_ball, _resolve_collision
 
 
 #load configuration file
-with open("pong/config.yaml", 'r') as file:
-    config = yaml.load(file, Loader=yaml.FullLoader)
+import utils
+config = utils.get_config()
 
 class Game:
 
