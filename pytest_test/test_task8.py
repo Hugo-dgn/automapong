@@ -197,7 +197,7 @@ def test_task3():
     pong.Env = CustomEnv
     pong.render = custom_render
 
-    train.train(DummieAgent("1"), DummieAgent("2"), 1000)
+    train.train(DummieAgent("1"), DummieAgent("2"), 1000, 0.1)
 
     pong.Env = _Env
     pong.render = _render

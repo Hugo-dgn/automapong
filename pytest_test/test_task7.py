@@ -6,7 +6,7 @@ def custom_transform_state(state):
     return (state[0],)
 
 def test_task7():
-    agent = QLearningAgent("noname", alpha=0.1, gamma=0.9, eps=0.1, end_eps=0, d_step=0.1, eps_decay=0.0001)
+    agent = QLearningAgent("noname", lr=0.1, gamma=0.9, eps=0.1, eeps=0, d=0.1, edecay=0.0001)
     agent.transform_state = custom_transform_state
 
     target = 0
@@ -20,7 +20,7 @@ def test_task7():
         
         agent.learn(state, action, reward, next_state, done=False)
         
-        target = agent.alpha*(1 + agent.gamma * target)
+        target = agent.lr*(1 + agent.gamma * target)
         answer = agent.Q[custom_transform_state(state)][action]
         if not answer == target:
             message = f"Incorrect implementation of the Bellman equation."

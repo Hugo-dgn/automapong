@@ -122,11 +122,6 @@ class DeepQLearningAgent(BaseAgent):
         return loss
 
         ####
-    
-    def init(self):
-        #### Write your code here for task
-        pass
-        ####
 
 def _get_transition(states, actions, next_states, rewards, dones):
     transition = {

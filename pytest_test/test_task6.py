@@ -6,7 +6,7 @@ def custom_transform_state(state):
     return (state[0],)
 
 def test_task6():
-    agent = QLearningAgent("noname", alpha=0.1, gamma=0.9, eps=0.1, end_eps=0, d_step=0.1, eps_decay=0.0001)
+    agent = QLearningAgent("noname", lr=0.1, gamma=0.9, eps=0.1, eeps=0, d=0.1, edecay=0.0001)
     
     agent.transform_state = custom_transform_state
 

@@ -728,3 +728,92 @@ class DQN_1(nn.Module):
 Complétez `__init__` et `forward` pour que cette class représente un réseaux de neuronnes tel que:
 - nombre d'entrers = `n_inputs`
 - nombre de sorties = `3`
+
+Maintenant que notre réseaux de neuronne est prêt, nous devons le gréfer à un agent. Ouvrez le fchier `agents/deepqlearning.py`, voici ce que vous devez voir :
+
+```python
+class DeepQLearningAgent(BaseAgent):
+    def __init__(self, name, dqn, lr, gamma, eps, eeps, edecay, capacity, batch, tau, skip):
+        BaseAgent.__init__(self, name)
+        self.lr = lr
+        self.memory = ReplayMemory(capacity)
+        self.batch = batch
+        self.tau = tau
+        self.skip = skip
+
+        self.gamma = gamma
+        self.eps = eps
+        self.eeps = eeps
+        self.edecay = edecay
+
+        self.step = 0
+
+        dummie_state = (0, 0, (0, 0), (0, 0))
+
+        n = len(self.transform_state(dummie_state).squeeze(0))
+
+        self.dqn = dqn(n)
+        self._target_dqn = dqn(n)
+
+        self.dqn.to(device)
+        self._target_dqn.to(device)
+
+        self.optimizer = torch.optim.Adam(self.dqn.parameters(), lr=self.lr, amsgrad=True)
+        self.criterion = torch.nn.SmoothL1Loss()
+    
+    def transform_state(self, state):
+        #### Write your code here for task 13
+        pass
+        ####
+
+    def learn(self, state, action, reward, next_state, done):
+        self.step += 1
+
+        state = self.transform_state(state)
+        next_state = self.transform_state(next_state)
+
+        self.push(reward, done)
+
+        #### Write your code here for task
+        pass
+        ####
+
+    def act(self, state, training):
+
+        state = self.transform_state(state) # transform the state in something usable
+
+        #epsilon greedy
+        if training and np.random.random() < (self.eps - self.eeps) * np.exp(-self.edecay * self.step) + self.eeps:
+            return np.random.choice([-1, 0, 1])
+        
+        #### Write your code here for task 14
+        pass
+        ####
+    
+    def soft_update_target(self):
+        #### Write your code here for task
+        pass
+        ####
+    
+    def get_loss(self):
+        state = transition["state"]
+        action = transition["action"] + 1
+        next_state = transition["next_state"]
+        reward = transition["reward"]
+        done = transition["done"]
+        
+        #### Write your code here for task
+        pass
+        ####
+```
+
+### Tâche 13
+
+Compléter la méthode `transform_state` pour qu'elle renvoie un état sous la forme d'un `tensor torch` avec un `shape = (1, k)`. Par exemple : `torch.tensor([[p, b[1]]], dtype=torch.float32)`. Attention le `dtype` est important, `torch` est optimisé pour les `float32`.
+
+### Tâche 14
+
+Compléter la méthode `act` :
+- Le réseaux de neuronne est accéssible avec `self.dqn`.
+- Pour prédire les `qvalues` : `self.dqn(state)`.
+- L'action à choisir est celle avec la `qvalue` la plus grande (utiliser `torch.argmax`).

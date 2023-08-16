@@ -13,7 +13,7 @@ def test_task9_eps():
 
         special_action = i%3 - 1
 
-        agent = QLearningAgent("noname", alpha=0.1, gamma=0.9, eps=eps, end_eps=0.1, d_step=0.1, eps_decay=0.0001)
+        agent = QLearningAgent("noname", lr=0.1, gamma=0.9, eps=eps, eeps=0, d=0.1, edecay=0.0001)
 
         down = 0
         up = 0
@@ -64,7 +64,7 @@ def test_task9_eeps():
 
         special_action = i%3 - 1
 
-        agent = QLearningAgent("noname", alpha=0.1, gamma=0.9, eps=0.5, end_eps=eeps, d_step=0.1, eps_decay=0.0001)
+        agent = QLearningAgent("noname", lr=0.1, gamma=0.9, eps=0.5, eeps=eeps, d=0.1, edecay=0.0001)
 
         down = 0
         up = 0
@@ -119,7 +119,7 @@ def test_task10_general():
 
         special_action = i%3 - 1
 
-        agent = QLearningAgent("noname", alpha=0.1, gamma=0.9, eps=eps, end_eps=end_eps, d_step=0.1, eps_decay=eps_decay)
+        agent = QLearningAgent("noname", lr=0.1, gamma=0.9, eps=eps, eeps=end_eps, d=0.1, edecay=eps_decay)
 
         down = 0
         up = 0

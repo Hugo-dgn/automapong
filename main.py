@@ -18,7 +18,7 @@ import network
 
 from play import play
 from train import train
-from grid import grid_schearch
+from schearch import grid_schearch
 
 from utils import get_agent
 
