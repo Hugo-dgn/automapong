@@ -8,7 +8,7 @@ from agents import RandomAgent
 from train import train
 from play import benchmark
 
-def grid_schearch(agentConstructor, trainAgent, benchmarkAgent, train_episode, benchmark_episode , **kwards):
+def grid_schearch(agentConstructor, trainAgent, benchmarkAgent, train_episode, benchmark_episode, dt, **kwards):
 
     constructor_signature = list(inspect.signature(agentConstructor.__init__).parameters.keys())
 
@@ -36,7 +36,7 @@ def grid_schearch(agentConstructor, trainAgent, benchmarkAgent, train_episode, b
 
         agent = agentConstructor(**hyperparams)
 
-        train(agent, trainAgent, train_episode)
+        train(agent, trainAgent, train_episode, dt)
 
         agent_fitness = benchmark(agent, benchmarkAgent, benchmark_episode)
 

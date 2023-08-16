@@ -216,7 +216,7 @@ def grid(args):
     device = "cuda" if torch.cuda.is_available() else "cpu"
     print(f"Trainig using {device}")
 
-    grid_schearch(GridAgent, trainagent, benchmarkagent, args.train_episode, args.benchmark_episode, **kwards)
+    grid_schearch(GridAgent, trainagent, benchmarkagent, args.train_episode, args.benchmark_episode, args.dt, **kwards)
 
 def main():
     parser = argparse.ArgumentParser(description="Agent Game")
@@ -268,6 +268,7 @@ def main():
     grid_parser.add_argument("benchmarkAgent", help="Name of the agent to do the benchmark.")
     grid_parser.add_argument("train_episode", type=int, help="Number of train_episode.")
     grid_parser.add_argument("benchmark_episode", type=int, help="Number of benchmark_episode.")
+    grid_parser.add_argument("-dt", type=float, help="Euler integration time.", default=0.1)
 
     grid_parser.add_argument("-name", nargs="*", type=str, help="name of the agent to create", default=("noname",))
     grid_parser.add_argument("-gamma", nargs="*", type=float, help="The Bellman's equation gamma.", default=[gamma])
