@@ -32,9 +32,9 @@ edecay = 0.01
 dqn = 1
 lr = 0.01
 capacity = 2_000
-batch = 512
+batch = 256
 tau = 1e-2
-skip = 50
+skip = 10
 d = 0.01
 
 ####
