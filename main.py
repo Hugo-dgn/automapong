@@ -30,11 +30,11 @@ eps = 1
 eeps = 0
 edecay = 0.01
 dqn = 1
-lr = 0.001
-capacity = 10_000
+lr = 0.01
+capacity = 2_000
 batch = 512
-tau = 1e-3
-skip = 5
+tau = 1e-2
+skip = 50
 d = 0.01
 
 ####

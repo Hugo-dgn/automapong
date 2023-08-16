@@ -692,17 +692,19 @@ Pour régler ce problème nous allons nous tourner vers les réseaux de neuronne
 
 ## Deep-QLearning
 
-Nous allons étudier une autre implémentation de la fonction `Q`, les réseaux de neuronnes profonds. Voici la topologie d'un réseaux de neuronnes pour un agent dont la méthode `transform_state` renvoie un `tuple` de `n` `float`:
-- input layer : `n` neuronnes.
-- hidden layers : peut être nimporte quoi.
-- output layer : `3` neuronnes (pour `up`, `down` et `nothing`).
+Nous allons étudier une autre implémentation de la fonction `Q` : les réseaux de neurones profonds. Voici la topologie d'un réseau de neurones pour un agent dont la méthode `transform_state` renvoie un `tuple` de `n` nombres flottants :
+- Couche d'entrée : `n` neurones.
+- Couches cachées : peut être n'importe quoi.
+- Couche de sortie : `3` neurones (pour les actions `haut`, `bas` et `rien`).
 
-Si `state` est le `tuple` donné par `transform_state` alors avec cette implémentation `Q(state) = q_values` où:
-- `q_values[0]` : `q_value` estimée si l'agent décend (`action=-1`).
-- `q_values[1]` : `q_value` estimée si l'agent reste sur place (`action=0`).
-- `q_values[2]` : `q_value` estimée si l'agent monte (`action=1`).
+Si `state` est le `tuple` renvoyé par `transform_state`, alors avec cette implémentation, `Q(state) = q_values`, où :
+- `q_values[0]` : Estimation de la valeur `Q` si l'agent descend (`action=-1`).
+- `q_values[1]` : Estimation de la valeur `Q` si l'agent reste sur place (`action=0`).
+- `q_values[2]` : Estimation de la valeur `Q` si l'agent monte (`action=1`).
 
-Nous allons tout de suite définir nôtre première topologie ! Ouvrez `network/topology.py`, vous devez voir ceci :
+
+Nous allons tout de suite définir notre première topologie ! Ouvrez le fichier `network/topology.py`. Vous devriez y voir ceci :
+
 
 ```python
 import torch.nn as nn
@@ -725,11 +727,11 @@ class DQN_1(nn.Module):
 
 ### Tâche 12
 
-Complétez `__init__` et `forward` pour que cette class représente un réseaux de neuronnes tel que:
-- nombre d'entrers = `n_inputs`
-- nombre de sorties = `3`
+Complétez les méthodes `__init__` et `forward` de cette classe pour qu'elle représente un réseau de neurones tel que :
+- Le nombre d'entrées = `n_inputs`
+- Le nombre de sorties = `3`
 
-Maintenant que notre réseaux de neuronne est prêt, nous devons le gréfer à un agent. Ouvrez le fchier `agents/deepqlearning.py`, voici ce que vous devez voir :
+Maintenant que notre réseau de neurones est prêt, nous devons l'intégrer à un agent. Ouvrez le fichier `agents/deepqlearning.py`. Voici ce que vous devez voir :
 
 ```python
 class DeepQLearningAgent(BaseAgent):
@@ -774,7 +776,7 @@ class DeepQLearningAgent(BaseAgent):
 
         self.push(reward, done)
 
-        #### Write your code here for task
+        #### Write your code here for task 17
         pass
         ####
 
@@ -791,7 +793,7 @@ class DeepQLearningAgent(BaseAgent):
         ####
     
     def soft_update_target(self):
-        #### Write your code here for task
+        #### Write your code here for task 16
         pass
         ####
     
@@ -802,18 +804,126 @@ class DeepQLearningAgent(BaseAgent):
         reward = transition["reward"]
         done = transition["done"]
         
-        #### Write your code here for task
+        #### Write your code here for task 15
         pass
         ####
 ```
 
 ### Tâche 13
 
-Compléter la méthode `transform_state` pour qu'elle renvoie un état sous la forme d'un `tensor torch` avec un `shape = (1, k)`. Par exemple : `torch.tensor([[p, b[1]]], dtype=torch.float32)`. Attention le `dtype` est important, `torch` est optimisé pour les `float32`.
+Complétez la méthode `transform_state` pour qu'elle renvoie un état sous la forme d'un tenseur `torch` avec une forme (`shape`) égale à `(1, k)`. Par exemple : `torch.tensor([[p, b[1]]], dtype=torch.float32)`. Faites attention au paramètre `dtype` qui est important, car `torch` est optimisé pour les `float32`.
 
 ### Tâche 14
 
-Compléter la méthode `act` :
-- Le réseaux de neuronne est accéssible avec `self.dqn`.
-- Pour prédire les `qvalues` : `self.dqn(state)`.
-- L'action à choisir est celle avec la `qvalue` la plus grande (utiliser `torch.argmax`).
+Complétez la méthode `act` :
+- Le réseau de neurones est accessible via `self.dqn`.
+- Pour prédire les `qvalues` : utilisez `self.dqn(state)`.
+- L'action à choisir est celle ayant la plus grande `qvalue` (utilisez `torch.argmax`).
+
+Pour entraîner notre réseau de neurones, nous avons besoin de calculer une perte (`loss`). Pour ce faire, nous allons utiliser l'équation de Bellman sur un lot (`batch`) de transitions.
+
+**Batch** : Fait référence à un groupe d'échantillons de données d'entraînement qui sont traités simultanément par le modèle lors d'une seule étape de calcul.
+
+**Transition** : On appelle transition d'une `frame` à une autre un dictionnaire `[state, action, next_state, reward, done]` :
+- `state` : état initial.
+- `action` : action choisie à partir de l'état initial.
+- `next_state` : état résultant de l'exécution de l'action `action` dans l'état `state`.
+- `reward` : récompense reçue pour avoir effectué l'action `action` dans l'état `state`.
+- `done` : indique si l'état `next_state` est terminal (c'est-à-dire si la partie est terminée).
+
+Nous allons calculer la perte (`loss`) sur un lot (`batch`) de transitions. Ce lot est déjà défini dans la méthode `get_loss` :
+
+```python
+transition = self.memory.sample(self.batch)
+
+state = transition["state"]
+action = transition["action"] + 1
+next_state = transition["next_state"]
+reward = transition["reward"]
+done = transition["done"]
+```
+
+Ici `state`, `action`, `next_state`, `reward` et `done` sont des `torch.Tensor` de `shape (agent.batch,)`.
+
+Nous savons grâce à l'équation de `Bellman` que la fonction `Q` optimale vérifie :
+
+$$
+Q(s, a) = r + \max Q(s', a')
+$$
+
+Ici, $r$ représente la récompense obtenue après avoir effectué l'action $a$ dans l'état $s$. Nous pouvons donc définir la perte (`loss`) comme ceci :
+
+$$
+l = Q(s, a) - r + \max Q(s', a')
+$$
+
+Dans le cas où $s'$ est terminal, voici l'équation :
+
+$$
+l = Q(s, a) - r
+$$
+
+Pour améliorer la stabilité, nous allons utiliser deux réseaux de neurones différents pour calculer $Q(s, a)$ et $Q(s', a')$. Voici comment le faire dans le code :
+- $Q(s, \cdot)$ = `self.dqn(state)`
+- $Q(s', \cdot)$ = `self._target_dqn(next_state)`
+
+Le réseau `target` a la même topologie que `dqn` et est en "retard" par rapport à celui-ci.
+
+**Important** : Utilisez la `loss` dans `__init__` :
+```python
+self.criterion = torch.nn.SmoothL1Loss()
+```
+Cette `loss` s'utilise de la manière suivante:
+```python
+self.criterion(input, target)
+```
+
+### Tâche 15
+
+Complétez la méthode `get_loss` pour qu'elle renvoie la `loss` associée au `batch` défini précédemment.
+
+Revenons sur le sujet du réseau `target`. Comme dit précédemment, celui-ci rend l'apprentissage plus stable en agissant comme un tampon pour les valeurs de $Q(s', a')$. En effet, le réseau `target` impose une variation faible de $Q(s', a')$ d'une itération à l'autre.
+
+Le réseau `target` correspond toujours à une ancienne version de `dqn` et est mis à jour à chaque étape d'apprentissage. Ainsi, si $p'$ est un paramètre de `target` et $p$ est le paramètre associé dans `dqn`, alors à chaque itération de l'apprentissage, nous devons effectuer l'opération suivante :
+
+$$
+p' \leftarrow \tau p + (1 - \tau) p'
+$$
+
+Avec `torch`, une manière simple de faire ça est :
+
+```python
+target_net_state_dict = self._target_dqn.state_dict()
+dqn_net_state_dict = self.dqn.state_dict()
+
+for key in dqn_net_state_dict:
+    target_net_state_dict[key] = dqn_net_state_dict[key]*self.tau + target_net_state_dict[key]*(1-self.tau)
+
+self._target_dqn.load_state_dict(target_net_state_dict)
+```
+
+Ici `self` est une instance de l'objet `DeepQLearningAgent`.
+
+### Tâche 16
+
+Complétez la méthode `soft_update_target`. Celle-ci doit mettre à jour tous les poids de `self._target_dqn`.
+
+Il reste maintenant à articuler tous ces éléments !
+
+### Tâche 17
+
+Complétez la méthode `learn`. Voici ce que vous devez implémenter :
+- Ajoutez la transition à la mémoire de l'agent :
+```python 
+self.memory.push(state, action, next_state, reward, done)
+```
+- Si `self.step % self.skip == 0`, appelez les méthodes `soft_update_target` et `get_loss`, puis effectuez une étape d'optimisation.
+
+Vous pouvez maintenant entraîner votre agent :
+```bash
+python main.py create dql dql
+python main.py train dql strong -e 1000
+python main.py reward dql ql
+```
+
+![reward](images/dql_vs_ql.png)
