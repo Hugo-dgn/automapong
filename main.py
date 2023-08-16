@@ -211,7 +211,7 @@ def grid(args):
 
     args.dqn = tuple([network.get_topology(i) for i in args.dqn])
 
-    kwards = {key: value for key, value in vars(args).items() if key not in ["GridAgent", "trainAgent", "benchmarkAgent", "train_episode", "benchmark_episode"]}
+    kwards = {key: value for key, value in vars(args).items() if key not in ["GridAgent", "trainAgent", "benchmarkAgent", "train_episode", "benchmark_episode", "dt"]}
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
     print(f"Trainig using {device}")
