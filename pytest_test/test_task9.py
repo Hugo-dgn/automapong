@@ -15,6 +15,6 @@ def test_task9():
         target = tuple([int(x/d_step)*d_step for x in s])
         answer = agent.discretize(s)
 
-        if not target == answer:
+        if not all(np.isclose(target, answer)):
             message = f"Wrong implementation of discretize methode. Expected {target} but got {answer} with d_step={d_step} and s={s}."
             raise AssertionError(message)

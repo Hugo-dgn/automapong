@@ -15,3 +15,23 @@ def load(name):
         agent = _torch.load(f, map_location=device)
     agent.init()
     return agent
+
+def get_agent(name_agent):
+    if name_agent == "human1":
+        return HumanAgent(player=1)
+    elif name_agent == "human2":
+        return HumanAgent(player=2)
+    elif name_agent == "simple":
+        agent = SimpleAgent("simple")
+        def _save():
+            pass
+        agent.save = _save
+        return agent
+    elif name_agent == "strong":
+        agent = StrongAgent("strong")
+        def _save():
+            pass
+        agent.save = _save
+        return agent
+    else:
+        return load(name_agent)

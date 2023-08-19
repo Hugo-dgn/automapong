@@ -93,13 +93,16 @@ Nous allons coder notre premier agent en utilisant une approche aussi simple que
 Ouvrez le fichier `agents/simple.py`. C'est dans ce fichier que nous allons coder notre premier agent. Vous devriez voir le code suivant :
 
 ```python
-from agents.super import Agent
+import numpy as np
 
-class SimpleAgent(Agent):
+from agents.super import BaseAgent
+
+class SimpleAgent(BaseAgent):
     def __init__(self, name):
-        Agent.__init__(self, name) # Cela permet de sauvegarder l'agent et ses performances
+        BaseAgent.__init__(self, name) # Cela permet de sauvegarder l'agent et ses performances
     
     def transform_state(self, state):
+        p, op, b, vb = state
         ####write yout code here for task 1
         pass
         ####
@@ -111,7 +114,7 @@ class SimpleAgent(Agent):
         ####
 ```
 
-Tous les agents hériteront de la classe `Agent`. La classe `Agent` implémente la méthode `save`, qui permet de sauvegarder l'agent, ainsi qu'un moyen d'enregistrer les performances de l'agent (nous verrons cela plus tard).
+Tous les agents hériteront de la classe `BaseAgent`. La classe `BaseAgent` implémente la méthode `save`, qui permet de sauvegarder l'agent, ainsi qu'un moyen d'enregistrer les performances de l'agent (nous verrons cela plus tard).
 
 La méthode `act` à pour but de remplacer la fonction `get_action`. Elle doit donc renvoyer 1, -1 ou 0 (monter, déscendre, ne pas bouger)
 
@@ -174,7 +177,20 @@ Copiez ce code dans le fichier `exemples.py` pour vérifier que tout fonctionne 
 
 ### Tâche 3
 
-Nous voulons généraliser ce code. Ouvrez le fichier `play.py` et complétez la fonction `play(agent1, agent2)` pour qu'elle fasse jouer ces deux agents indéfiniment. Cette fonction doit afficher le jeu.
+Nous voulons généraliser ce code. Ouvrez le fichier `play.py` : 
+```python
+import pong
+
+def play(agent1, agent2):
+    env = pong.Env()
+
+    ####write yout code here for task 3
+    
+    ####
+
+    return env.get_results() # return (wins for agent1, wins for agent2, draws)
+```
+Complétez la fonction `play(agent1, agent2)` pour qu'elle fasse jouer ces deux agents indéfiniment. Cette fonction doit afficher le jeu.
 
 Vous pouvez désormais faire jouer des agents en utilisant le fichier `main.py`. Il vous suffit d'exécuter la commande :
 
@@ -186,6 +202,7 @@ Vous pourrez observer le duel entre les deux agents !
 Voici les noms d'agents acceptés :
 - `human` pour contrôler l'agent avec le clavier.
 - `simple` pour l'agent simple.
+- `strong` pour l'agent strong (déjà implémenté).
 - Le nom d'un agent enregistré dans le dossier `agents/save` (nous aborderons ce point sous peu).
 
 Par exemple pour jouer contre votre agent `simple` :
@@ -216,7 +233,7 @@ Il nous faut maintenant une méthode pour trouver (approcher) cette fonction `Q`
 **Mise à jour de la fonction Q** : Lorsque l'agent exécute une action dans un état donné, il reçoit une récompense de l'environnement et atteint un nouvel état. L'agent utilise ces informations pour mettre à jour la valeur `Q` de la paire `(état actuel, action)` en utilisant la formule de mise à jour `Q` :
 
 $$
-Q(s, a) = Q(s, a) + lr \cdot (r + \gamma \cdot \max(Q(s', a')) - Q(s, a))
+Q(s, a) \leftarrow Q(s, a) + lr \cdot (r + \gamma \cdot \max(Q(s', a')) - Q(s, a))
 $$
 
 - $Q(s, a)$ : la valeur $Q$ de l'état $s$ et de l'action $a$.
@@ -225,7 +242,7 @@ $$
 - $\gamma$ : facteur d'escompte, prend en compte l'importance des récompenses à court terme par rapport aux récompenses à long terme ($0 < \gamma < 1$ car $\sum_{n=0}^\infty \gamma^n$ doit converger).
 - $\max(Q(s', a'))$ : la valeur $Q$ maximale pour les actions possibles dans le prochain état $s'$.
 
-Rassurez-vous, cette équation ne sort pas du chapeau. C'est l'équation de Bellman, et il a été prouvé qu'elle permet de converger vers la politique optimale. Pour plus d'informations, je vous invite à chercher `Q-learning Bellman equation` sur Internet.
+Rassurez-vous, cette équation ne sort pas du chapeau. Elle vient de l'équation de Bellman, et il a été prouvé qu'elle permet de converger vers la politique optimale. Pour plus d'informations, je vous invite à chercher `Q-learning Bellman equation` sur Internet.
 
 Bien, beaucoup de choses ont été dites. Maintenant, comment implémenter tout ça?
 
@@ -241,17 +258,17 @@ import numpy as np
 from agents.super import BaseAgent
 
 class QLearningAgent(BaseAgent):
-    def __init__(self, name, lr, gamma, eps, end_eps, d_step, eps_decay):
+    def __init__(self, name, lr, gamma, eps, eeps, d, edecay):
         BaseAgent.__init__(self, name)
         self.Q = {}
 
         self.lr = lr
         self.gamma = gamma
         self.eps = eps
-        self.end_eps = end_eps
-        self.eps_decay = eps_decay
+        self.eeps = eeps
+        self.edecay = edecay
 
-        self.d_step = d_step
+        self.d = d
 
         self.step = 0
     
@@ -262,43 +279,44 @@ class QLearningAgent(BaseAgent):
     
     def transform_state(self, state):
         p, op, b, vb = state
-        #### Write your code here for task 4
-
+        #### Write your code here for task  4
+        
         ####
 
         #### Write your code here for task 9
-
+        
         ####
 
     def learn(self, state, action, reward, next_state, done):
+        self.step += 1
+
         state = self.transform_state(state)
         next_state = self.transform_state(next_state)
 
         self.check_q_value(state)
         self.check_q_value(next_state)
 
-        self.push(reward, done) # Saves reward, it is a methode of BaseAgent (see agents/super.py).
+        self.push(reward, done)
 
-        #### Write yout code here for task 7
+        #### Write your code here for task 7
 
         ####
 
     def act(self, state, training):
-        state = self.transform_state(state) # transform the state in something usable
 
+        state = self.transform_state(state) # transform the state in something usable
         self.check_q_value(state) # if the state is not in self.Q, add it.
 
-
         #### Write your code here for task 9
-
+        
         ####
-
-        #### Write yout code here for task 6
-
+        
+        #### Write your code here for task 6
+    
         ####
     
     def check_q_value(self, state):
-        #### Write yout code here for task 5
+        #### Write your code here for task 5
         pass
         ####
 ```
@@ -326,7 +344,7 @@ La dernière étape facile ! Codons la méthode `act` de notre agent. Pour rappe
 Nous y voilà enfin ! Il est temps de coder la partie d'apprentissage de cet agent. Cette phase consiste essentiellement à implémenter l'équation de Bellman dans la méthode `learn`. Pour rappel, voici l'équation en question, qui permet de mettre à jour les valeurs du dictionnaire `Q` :
 
 $$
-Q(s, a) = Q(s, a) + lr \cdot (r + \gamma \cdot \max(Q(s', a')) - Q(s, a))
+Q(s, a) \leftarrow Q(s, a) + lr \cdot (r + \gamma \cdot \max(Q(s', a')) - Q(s, a))
 $$
 
 Les variables correspondantes aux paramètres de la méthode `learn` sont les suivantes :
@@ -347,7 +365,7 @@ Maintenant que tout cela est clair (j'espère), implémentez ceci dans la métho
 
 **Important** : Pour les états finaux (`done = True`) l'équation s'écrit:
 
-- $Q(s, a) = r$
+- $Q(s, a) \leftarrow  r$
 
 ## Boucle d'entrainnement
 
@@ -386,9 +404,9 @@ Et oui, l'environnement donne aussi des récompenses ! Pour modifier les valeurs
 ```python
 #### learning Parameters ####
 
-touch_reward = 1 #reward given each time the player touches the ball
-win_reward = 5 #reward given when the player won
-loss_reward = -10 #reward given when the player lost
+touch_reward = 0 #reward given each time the player touches the ball
+win_reward = 1 #reward given when the player won
+loss_reward = -1 #reward given when the player lost
 skip = 1 # agent makes a decision each skip step
 
 #### learning Parameters ####
@@ -399,15 +417,18 @@ Revenons à nos moutons. Ouvrez le fichier `train.py`, qui doit ressembler à ce
 ```python
 import pong
 
-def train(agent1, agent2, episode):
+from tqdm.auto import tqdm
 
+def train(agent1, agent2, episode, dt):
     env = pong.Env()
-    state1, state2 = env.reset()
 
     for e in tqdm(range(episode), desc="training"): # for the progress bar.
+    state1, state2 = env.reset()
     #### write yout code here for task 8
         pass
     ####
+
+    return env.get_results()
 ```
 
 La boucle `for` s'arrête une fois que `episode` parties ont été jouées.
@@ -418,6 +439,7 @@ Complétez la fonction `train` pour qu'elle entraîne `agent1` et `agent2` en le
 - Chaque itération de la boucle `for` correspond à une partie.
 - Une partie s'arrête uniquement lorsque la variable `done` fournie par l'environnement est `True` (la condition de la boucle `while` de `play` doit donc être modifiée).
 - Notez que `env.step` renvoie le `next_state`, vous devez conserver en mémoire `state`.
+- `env.step` doit être appelée avec `dt=dt`.
 - Pour chaque agent, la méthode `learn` doit être appelée après `env.step` et avec les informations que `env.step` fournit (c'est-à-dire `reward` et `next_state`).
 - Une fois que la méthode `learn` a été exécutée, vous pouvez remplacer `state` par `next_state` (c'est-à-dire `state = next_state`).
 
@@ -441,10 +463,10 @@ Pour entraîner vos agents, utilisez la commande suivante :
 python main.py train agent1 agent2 ... agentn -e number_of_episodes_per_round -r number_of_rounds
 ```
 
-Par exemple, pour entraîner `ql` contre `simple` pendant `10,000` épisodes, exécutez la commande suivante :
+Par exemple, pour entraîner `ql` contre `simple` pendant `1,000` épisodes, exécutez la commande suivante :
 
 ```bash
-python main.py train ql simple -e 10_000
+python main.py train ql simple -e 1_000
 ```
 
 Cela ne devrait pas prendre plus que quelques secondes ! Maintenant que notre agent est bien entraîné, nous pouvons vérifier la récompense qu'il a reçue pour chaque épisode en utilisant la commande suivante :
@@ -472,7 +494,7 @@ python main.py info ql
 
 Pour ma part j'obtient:
 ```bash
-size = 45.2 MB
+size = 1.8 MB
 ...
 ```
 
@@ -531,10 +553,10 @@ class QLearningAgent(BaseAgent):
 
         #### Write your code here for task 7
 
-        max_next_q = max(self.Q[next_state].values())
         if done:
             self.Q[state][action] = reward
         else:
+            max_next_q = max(self.Q[next_state].values())
             self.Q[state][action] += self.lr * (reward + self.gamma * max_next_q - self.Q[state][action])
         
         ####
@@ -565,7 +587,7 @@ class QLearningAgent(BaseAgent):
 
  ### Tâche 9
 
- Dans la méthode `discretize`, discrétisez un tuple de nombres flottants quelconques `s` avec le pas `self.d_step`. Utilisez la formule suivante pour discrétiser un nombre réel `x` avec un pas `d` : `y = int(x / d) * d`. Cette méthode doit donc renvoyer un `tuple` de même longueur que son paramètre. Une fois cette fonction implémentée, appelez-la dans la méthode `transform_state` pour transformer l'état continu `s` en état discret. `transform_state` doit renvoyer cet état discret.
+ Dans la méthode `discretize`, discrétisez un tuple de nombres flottants quelconques `s` avec le pas `self.d`. Utilisez la formule suivante pour discrétiser un nombre réel `x` avec un pas `d` : `y = int(x / d) * d`. Cette méthode doit donc renvoyer un `tuple` de même longueur que son paramètre. Une fois cette fonction implémentée, appelez-la dans la méthode `transform_state` pour transformer l'état continu `s` en état discret. `transform_state` doit renvoyer cet état discret.
 
  **Important** : Compter bien le nombre d'état possible ! Ce nombre dépend uniquement de votre implémentation de `transform_state`. Idéalement, rester proche de `1,000` états.
 
@@ -608,7 +630,7 @@ Au début de son apprentissage, l'agent ne sait rien, donc le hasard doit jouer 
 
  ### Tâche 10
 
- Lors des premières parties d'entrainement nous voulons explorer l'environnement avec des actions aléatoires. Pour implémenter ceci, modifier la méthode `act` tel que: si `training=True` et `np.random.random() < (self.eps - self.end_eps) * np.exp(-self.eps_decay * self.step) + self.end_eps` alors l'agent choisit une action aléatoirement.
+ Lors des premières parties d'entrainement nous voulons explorer l'environnement avec des actions aléatoires. Pour implémenter ceci, modifier la méthode `act` tel que: si `training=True` et `np.random.random() < (self.eps - self.eeps) * np.exp(-self.edecay * self.step) + self.eeps` alors l'agent choisit une action aléatoirement.
 
 Ceci permet à l'agent d'agir de manière aléatoire au début de l'entraînement. Après un nombre d'étapes assez grand, il commencera à utiliser la politique `Q` avec une probabilité de `1 - self.end_eps`. En d'autres termes, il explorera davantage au début et se concentrera progressivement sur la politique apprise.
 
@@ -623,10 +645,11 @@ Ceci permet à l'agent d'agir de manière aléatoire au début de l'entraînemen
 Maintenant que tout cela est implémenté, nous pouvons constater que notre agent apprend beaucoup mieux :
 ```bash
  python main.py create ql ql
- python main.py train ql simple -e 5_000
+ python main.py train ql simple -e 1_000
  python main.py reward ql
  ```
  ![reward](images/complete_ql.png)
+
 Essayez maintenant de jouer contre cet agent :
  ```bash
  python main.py play human ql
@@ -675,8 +698,8 @@ python main.py reward ql1 ql2
  ```
 - `d` (Pas de la discrétisation) :
 ```bash
-python main.py create ql ql1 -d 0.1
-python main.py create ql ql2 -d 0.01
+python main.py create ql ql1 -d 0.01
+python main.py create ql ql2 -d 0.0001
 python main.py train simple ql1 ql2 -e 1000 -r 2
 python main.py reward ql1 ql2
  ```
@@ -692,7 +715,7 @@ Pour régler ce problème nous allons nous tourner vers les réseaux de neuronne
 
 ## Deep-QLearning
 
-Nous allons étudier une autre implémentation de la fonction `Q` : les réseaux de neurones profonds. Voici la topologie d'un réseau de neurones pour un agent dont la méthode `transform_state` renvoie un `tuple` de `n` nombres flottants :
+Nous allons étudier une autre implémentation de la fonction `Q` : les réseaux de neurones profonds. Voici la topologie d'un réseau de neurones pour un agent dont la méthode `transform_state` renvoie un `tuple` de `n floats` :
 - Couche d'entrée : `n` neurones.
 - Couches cachées : peut être n'importe quoi.
 - Couche de sortie : `3` neurones (pour les actions `haut`, `bas` et `rien`).
@@ -737,31 +760,31 @@ Maintenant que notre réseau de neurones est prêt, nous devons l'intégrer à u
 class DeepQLearningAgent(BaseAgent):
     def __init__(self, name, dqn, lr, gamma, eps, eeps, edecay, capacity, batch, tau, skip):
         BaseAgent.__init__(self, name)
-        self.lr = lr
+        self.lr = lr #learning rate
         self.memory = ReplayMemory(capacity)
-        self.batch = batch
-        self.tau = tau
-        self.skip = skip
+        self.batch = batch #batch size
+        self.tau = tau #soft update parameter
+        self.skip = skip #learning step
 
-        self.gamma = gamma
-        self.eps = eps
-        self.eeps = eeps
-        self.edecay = edecay
+        self.gamma = gamma #Bellman equation
+        self.eps = eps #start value of epsilon for epsilon greedy algorithm
+        self.eeps = eeps #end value of epsilon for epsilon greedy algorithm
+        self.edecay = edecay #speed of the transition between eps and eeps
 
-        self.step = 0
+        self.step = 0 #number of call of learn
 
         dummie_state = (0, 0, (0, 0), (0, 0))
 
         n = len(self.transform_state(dummie_state).squeeze(0))
 
-        self.dqn = dqn(n)
-        self._target_dqn = dqn(n)
+        self.dqn = dqn(n) #policy net
+        self._target_dqn = dqn(n) #target net
 
         self.dqn.to(device)
         self._target_dqn.to(device)
 
-        self.optimizer = torch.optim.Adam(self.dqn.parameters(), lr=self.lr, amsgrad=True)
-        self.criterion = torch.nn.SmoothL1Loss()
+        self.optimizer = torch.optim.Adam(self.dqn.parameters(), lr=self.lr, amsgrad=True) #optimizer
+        self.criterion = torch.nn.SmoothL1Loss() #loss function
     
     def transform_state(self, state):
         #### Write your code here for task 13
@@ -798,6 +821,8 @@ class DeepQLearningAgent(BaseAgent):
         ####
     
     def get_loss(self):
+        transition = self.memory.sample(self.batch)
+
         state = transition["state"]
         action = transition["action"] + 1
         next_state = transition["next_state"]
@@ -820,7 +845,7 @@ Complétez la méthode `act` :
 - Pour prédire les `qvalues` : utilisez `self.dqn(state)`.
 - L'action à choisir est celle ayant la plus grande `qvalue` (utilisez `torch.argmax`).
 
-Pour entraîner notre réseau de neurones, nous avons besoin de calculer une perte (`loss`). Pour ce faire, nous allons utiliser l'équation de Bellman sur un lot (`batch`) de transitions.
+Pour entraîner notre réseau de neurones, nous avons besoin de calculer une perte (`loss`). Pour ce faire, nous allons utiliser l'équation de `Bellman` sur un lot (`batch`) de transitions.
 
 **Batch** : Fait référence à un groupe d'échantillons de données d'entraînement qui sont traités simultanément par le modèle lors d'une seule étape de calcul.
 
@@ -834,18 +859,61 @@ Pour entraîner notre réseau de neurones, nous avons besoin de calculer une per
 Nous allons calculer la perte (`loss`) sur un lot (`batch`) de transitions. Ce lot est déjà défini dans la méthode `get_loss` :
 
 ```python
-transition = self.memory.sample(self.batch)
+def get_loss(self):
+    transition = self.memory.sample(self.batch)
 
-state = transition["state"]
-action = transition["action"] + 1
-next_state = transition["next_state"]
-reward = transition["reward"]
-done = transition["done"]
+    state = transition["state"]
+    action = transition["action"] + 1
+    next_state = transition["next_state"]
+    reward = transition["reward"]
+    done = transition["done"]
+    
+    #### Write your code here for task 15
+    pass
+    ####
 ```
 
 Ici `state`, `action`, `next_state`, `reward` et `done` sont des `torch.Tensor` de `shape (agent.batch,)`.
 
-Nous savons grâce à l'équation de `Bellman` que la fonction `Q` optimale vérifie :
+**ReplayMemory** : Remarquez que pour obtenir un `batch` nous utilisons la méthode `sample` d'un objet `memory`. Ici `memory` est une instance de la class `ReplayMemory` :
+```python
+class ReplayMemory:
+
+    def __init__(self, capacity):
+        self.capacity = capacity
+        self.memory = deque([], maxlen=capacity)
+    
+    def push(self, state, action, next_state, reward, done):
+        self.memory.append((state, action, next_state, reward, int(done)))
+
+    def sample(self, batch_size):
+        sample = random.sample(self.memory, batch_size)
+
+        return _get_transition(*zip(*sample))
+
+    def __len__(self):
+        return len(self.memory)
+
+    def __reduce__(self):
+        return (ReplayMemory, (self.capacity,))
+``` 
+Ceci permet de garder en mémoire toutes les `transition` avec la méthode `push` qui doit être appelée au début de la méthode `learn` :
+```python
+def learn(self, state, action, reward, next_state, done):
+        self.step += 1
+
+        state = self.transform_state(state)
+        next_state = self.transform_state(next_state)
+
+        self.push(reward, done)
+
+        #### Write your code here for task
+        self.memory.push(state, action, next_state, reward, done)
+        ####
+```
+Pour effectuer une étape de l'apprentissage nous demandons un `batch` de transition aléatoire à cette mémoire. Ceci permet de décoréler l'apprentissage et l'ordre des actions.
+
+Très bien, maintenant comment calculer la `loss`. Nous savons grâce à l'équation de `Bellman` que la fonction `Q` optimale vérifie :
 
 $$
 Q(s, a) = r + \max Q(s', a')
@@ -869,7 +937,7 @@ Pour améliorer la stabilité, nous allons utiliser deux réseaux de neurones di
 
 Le réseau `target` a la même topologie que `dqn` et est en "retard" par rapport à celui-ci.
 
-**Important** : Utilisez la `loss` dans `__init__` :
+**Important** : Utilisez la `loss` qui est définie dans `__init__` :
 ```python
 self.criterion = torch.nn.SmoothL1Loss()
 ```
@@ -908,7 +976,9 @@ Ici `self` est une instance de l'objet `DeepQLearningAgent`.
 
 Complétez la méthode `soft_update_target`. Celle-ci doit mettre à jour tous les poids de `self._target_dqn`.
 
-Il reste maintenant à articuler tous ces éléments !
+Il reste maintenant à articuler tous ces éléments ! Nous allons avoir besoin de deux nouvelles variables : `step` et `skip`.
+- `step` : compte le nombre d'appels de la méthode `learn`.
+- `skip` : indique combien d'appels de la méthode `learn` doivent être ignorés. En d'autres termes, notre agent doit apprendre lorsque `step` est égal à `k * skip`.
 
 ### Tâche 17
 
@@ -917,7 +987,7 @@ Complétez la méthode `learn`. Voici ce que vous devez implémenter :
 ```python 
 self.memory.push(state, action, next_state, reward, done)
 ```
-- Si `self.step % self.skip == 0`, appelez les méthodes `soft_update_target` et `get_loss`, puis effectuez une étape d'optimisation.
+- Si `self.step % self.skip == 0`, appelez les méthodes `soft_update_target` et `get_loss`, puis effectuez une étape d'optimisation avec `self.optimizer`.
 
 Vous pouvez maintenant entraîner votre agent :
 ```bash

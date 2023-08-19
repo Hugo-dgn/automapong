@@ -19,22 +19,18 @@ class QLearningAgent(BaseAgent):
     
     def discretize(self, s):
         #### Write your code here for task 9
-        d_s = tuple([int(x/self.d)*self.d for x in s])
-
-        return d_s
+        return tuple(map(lambda x : int(x/self.d)*self.d, s))
         ####
     
     def transform_state(self, state):
-        #### Write your code here for task  4
         p, op, b, vb = state
-        s = (np.clip(p-b[1], -0.2, 0.2), b[0]/40, vb[0]/40, np.sign(vb[1]))
+        #### Write your code here for task  4
+        state = (p, b[1])
         ####
 
         #### Write your code here for task 9
-        d_s = self.discretize(s)
+        return self.discretize(state)
         ####
-
-        return d_s
 
     def learn(self, state, action, reward, next_state, done):
         self.step += 1
@@ -48,13 +44,10 @@ class QLearningAgent(BaseAgent):
         self.push(reward, done)
 
         #### Write your code here for task 7
-
-        max_next_q = max(self.Q[next_state].values())
         if done:
             self.Q[state][action] = reward
         else:
-            self.Q[state][action] += self.lr * (reward + self.gamma * max_next_q - self.Q[state][action])
-        
+            self.Q[state][action] += self.lr * (reward + self.gamma * max(self.Q[next_state].values()) - self.Q[state][action])
         ####
 
     def act(self, state, training):
@@ -62,25 +55,23 @@ class QLearningAgent(BaseAgent):
         state = self.transform_state(state) # transform the state in something usable
         self.check_q_value(state) # if the state is not in self.Q, add it.
 
-        #### Write your code here for task 9
-
+        #### Write your code here for task 10
         if training and np.random.random() < (self.eps - self.eeps) * np.exp(-self.edecay * self.step) + self.eeps:
-            return np.random.choice([-1, 0, 1])
-        
+            return np.random.choice((-1, 0, 1))
+        ####
+
+        #### Write your code here for task 11
+        if self.Q[state][-1] == self.Q[state][0] == self.Q[state][1]:
+            return np.random.choice((-1, 0, 1))
         ####
         
         #### Write your code here for task 6
-
-        action_q_values = self.Q[state]
-        if all(value == list(action_q_values.values())[0] for value in action_q_values.values()):
-            return np.random.choice([-1, 0, 1])
-
-        return max(action_q_values, key=action_q_values.get)
-    
+        action = max(self.Q[state], key=self.Q[state].get)
+        return action
         ####
     
     def check_q_value(self, state):
         #### Write your code here for task 5
-        if state not in self.Q:
-            self.Q[state] = {1 : 0, -1 : 0, 0 : 0}
+        if not state in self.Q:
+            self.Q[state] = {-1 : 0, 0 : 0, 1 : 0}
         ####

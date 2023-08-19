@@ -5,8 +5,6 @@ import numpy as np
 
 import torch
 
-from utils import get_agent
-
 from agents.super import BaseAgent
 
 from play import benchmark

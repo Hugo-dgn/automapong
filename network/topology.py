@@ -32,7 +32,8 @@ class DQN_1(nn.Module):
     
     def forward(self, x):
         #### Write your code here for task 12
-        return self.network(x)
+        #return self.network(x)
+        pass
         ####
     
 class DQN_2(nn.Module):

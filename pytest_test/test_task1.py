@@ -7,8 +7,8 @@ def test_task1():
     for _ in range(10):
         p = np.random.randn()
         op = np.random.randn()
-        b = np.random.randn(2)
-        vb = np.random.randn(2)
+        b = tuple(np.random.randn(2))
+        vb = tuple(np.random.randn(2))
 
         state = (p, op, b, vb)
         target = (p, b[1])

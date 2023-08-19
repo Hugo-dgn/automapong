@@ -171,7 +171,11 @@ def test_task3():
     pong.Env = CustomEnv
     pong.render = custom_render
 
-    play.play(DummieAgent("1"), DummieAgent("2"))
+    results = play.play(DummieAgent("1"), DummieAgent("2"))
+
+    if not schedule.step == 1001:
+        message = f"The play function stoped after {schedule.step} steps. This test runs the game for 1001 steps."
+        raise AssertionError(message)
 
     pong.Env = _Env
     pong.render = _render

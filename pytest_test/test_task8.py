@@ -135,7 +135,10 @@ class Schedule:
         if right_call != "step":
             message = get_message(right_call)
             raise AssertionError(message)
-
+        
+        if not dt == right_dt:
+            message = f"The `dt` parameter of the step methode must be the `dt` provided to the train function. Got {dt} instead of {right_dt}."
+            raise AssertionError(message)
         if action1 != self.action1:
             message = "The action provided for agent1 is not correct"
             raise AssertionError(message)
@@ -189,6 +192,8 @@ class DummieAgent(agents.BaseAgent):
 
 schedule = Schedule()
 
+right_dt = abs(np.random.randn()) + 0.01
+
 def test_task3():
 
     _Env = pong.Env
@@ -197,7 +202,7 @@ def test_task3():
     pong.Env = CustomEnv
     pong.render = custom_render
 
-    train.train(DummieAgent("1"), DummieAgent("2"), 1000, 0.1)
+    train.train(DummieAgent("1"), DummieAgent("2"), 1000, right_dt)
 
     pong.Env = _Env
     pong.render = _render

@@ -20,8 +20,6 @@ from play import play
 from train import train
 from schearch import grid_schearch
 
-from utils import get_agent
-
 
 #### Default parameters for agent creation
 
@@ -35,7 +33,7 @@ capacity = 2_000
 batch = 256
 tau = 1e-2
 skip = 10
-d = 0.01
+d = 0.05
 
 ####
 
@@ -47,8 +45,8 @@ def _play(args):
     if args.agents[1] == "human":
         args.agents[1] = "human2"
 
-    agent1 = get_agent(args.agents[0])
-    agent2 = get_agent(args.agents[1])
+    agent1 = agents.get_agent(args.agents[0])
+    agent2 = agents.get_agent(args.agents[1])
     play(agent1, agent2)
 
 def _train(args):
@@ -63,7 +61,7 @@ def _train(args):
             message = "Agent can't be trained by human. Meaning 'human' is not a valid argument for train."
             raise AssertionError(message)
         else:
-            train_agents.append(get_agent(name))
+            train_agents.append(agents.get_agent(name))
 
     if len(train_agents) == 1:
         train_agents.append(train_agents[0])
@@ -77,12 +75,9 @@ def _train(args):
                     continue
                 print(f"\n{agent1.name} vs {agent2.name}")
 
-                mean_reward1, mean_reward2, resutlts = train(agent1, agent2, args.episode, args.dt)
+                results = train(agent1, agent2, args.episode, args.dt)
 
-                print(f"mean reward for {agent1.name} : {mean_reward1}")
-                print(f"mean reward for {agent2.name} : {mean_reward2}")
-
-                for agent, win in resutlts.items():
+                for agent, win in results.items():
                     if agent == 1:
                         print(f"win for agent {agent1.name} : {win}")
                     elif agent == 2:
@@ -150,7 +145,7 @@ def reward(args):
         plt.title(f"reward")
     for i, name_agent in enumerate(args.agents):
 
-        agent = get_agent(name_agent)
+        agent = agents.get_agent(name_agent)
 
         if args.split:
             plt.subplot(nrows, ncols, i+1)
@@ -170,10 +165,10 @@ def reward(args):
         pad_y1 = np.pad(y, (int(n1/2), n1 - int(n1/2) - 1), 'constant', constant_values=(y[0], y[-1]))
         pad_y2 = np.pad(y, (int(n2/2), n2 - int(n2/2) - 1), 'constant', constant_values=(y[0], y[-1]))
 
-        window1 = np.ones(n1) / n1
+        window1 = get_gauss_kernel(n1)
         y1 = np.convolve(pad_y1, window1, mode='valid')
 
-        window2 = np.ones(n2) / n2
+        window2 = get_gauss_kernel(n2)
         y2 = np.convolve(pad_y2, window2, mode='valid')
 
         if not args.clean:
@@ -187,8 +182,14 @@ def reward(args):
     plt.legend()
     plt.show()
 
+def get_gauss_kernel(n):
+    x_win = np.linspace(-n / 2, n / 2, n)
+    sigma = n/3
+    kernel = np.exp(-x_win**2 / (2 * sigma**2)) / (sigma * np.sqrt(2 * np.pi))
+    return kernel / np.sum(kernel)
+
 def info(args):
-    agent = get_agent(args.agent)
+    agent = agents.get_agent(args.agent)
 
     size = os.path.getsize(f"agents/save/{agent.name}")
     human_readable_size = humanize.naturalsize(size)
@@ -206,8 +207,8 @@ def grid(args):
     elif args.GridAgent == "ql":
         GridAgent = agents.QLearningAgent
     
-    trainagent = get_agent(args.trainAgent)
-    benchmarkagent = get_agent(args.benchmarkAgent)
+    trainagent = agents.get_agent(args.trainAgent)
+    benchmarkagent = agents.get_agent(args.benchmarkAgent)
 
     args.dqn = tuple([network.get_topology(i) for i in args.dqn])
 
