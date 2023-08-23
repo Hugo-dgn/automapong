@@ -27,7 +27,7 @@ def test_task9_eps():
             agent.Q[key][special_action] = 1
 
         for _ in range(n):
-            agent.step = -1
+            agent.step = 0
             action = agent.act(state, training=True)
 
             if action == -1:
@@ -133,7 +133,7 @@ def test_task10_general():
             agent.Q[key][special_action] = 1
 
         for _ in range(n):
-            agent.step = step - 1
+            agent.step = step
             action = agent.act(state, training=True)
 
             if action == -1:

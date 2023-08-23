@@ -8,7 +8,7 @@ from agents.deepqlearning import _get_transition
 import agents
 import network
 
-class DummieReplayMemory:
+class DummyReplayMemory:
 
     def __init__(self, capacity):
         self.capacity = capacity
@@ -30,7 +30,7 @@ class DummieReplayMemory:
         return len(self.memory)
 
     def __reduce__(self):
-        return (DummieReplayMemory, (self.capacity,))
+        return (DummyReplayMemory, (self.capacity,))
 
 def compute_loss(agent):
     transition = agent.memory._current_sample
@@ -54,7 +54,7 @@ def test_task15():
 
     dqn = network.get_topology(1)
     agent = agents.DeepQLearningAgent("noname", dqn=dqn, lr=0.1, gamma=0.9, eps=0.1, eeps=0, edecay=1, capacity=1000, batch=32, tau=0.1, skip=1)
-    agent.memory = DummieReplayMemory(agent.memory.capacity)
+    agent.memory = DummyReplayMemory(agent.memory.capacity)
 
     for i in range(100):
         state = (i, i, (i, i), (i, i))

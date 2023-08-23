@@ -141,7 +141,7 @@ class Schedule:
 
         self.step += 1
 
-class DummieAgent(agents.BaseAgent):
+class DummyAgent(agents.BaseAgent):
 
     def __init__(self, name):
         agents.BaseAgent.__init__(self, name)
@@ -171,7 +171,7 @@ def test_task3():
     pong.Env = CustomEnv
     pong.render = custom_render
 
-    results = play.play(DummieAgent("1"), DummieAgent("2"))
+    results = play.play(DummyAgent("1"), DummyAgent("2"))
 
     if not schedule.step == 1001:
         message = f"The play function stoped after {schedule.step} steps. This test runs the game for 1001 steps."

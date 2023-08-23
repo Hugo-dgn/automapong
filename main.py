@@ -28,12 +28,12 @@ eps = 1
 eeps = 0
 edecay = 0.01
 dqn = 1
-lr = 0.01
+lr = 1e-3
 capacity = 2_000
 batch = 256
-tau = 1e-2
+tau = 1/batch
 skip = 10
-d = 0.05
+d = 0.01
 
 ####
 
@@ -143,6 +143,9 @@ def reward(args):
     if not args.split:
         plt.figure()
         plt.title(f"reward")
+        plt.xlabel("episode")
+        plt.ylabel("reward")
+    
     for i, name_agent in enumerate(args.agents):
 
         agent = agents.get_agent(name_agent)
@@ -150,6 +153,8 @@ def reward(args):
         if args.split:
             plt.subplot(nrows, ncols, i+1)
             plt.title(f"reward for agent {agent.name}")
+            plt.xlabel("episode")
+            plt.ylabel("reward")
 
         y = agent._reward_history
 
@@ -171,15 +176,14 @@ def reward(args):
         window2 = get_gauss_kernel(n2)
         y2 = np.convolve(pad_y2, window2, mode='valid')
 
+        plt.plot(x, y2, label=agent.name if not args.split else None)
+        color = plt.gca().lines[-1].get_color()
         if not args.clean:
-            plt.plot(x, y1, color="grey")
-        plt.plot(x, y2, label=agent.name)
-
-        plt.xlabel("episode")
-        plt.ylabel("reward")
+            plt.plot(x, y1, color=color, alpha=0.3)
     
     plt.subplots_adjust(wspace=0.7, hspace=0.7)
-    plt.legend()
+    if not args.split:
+        plt.legend()
     plt.show()
 
 def get_gauss_kernel(n):

@@ -15,6 +15,6 @@ class SimpleAgent(BaseAgent):
     def act(self, state, training):
         state = self.transform_state(state)
         ####write yout code here for task 2
-        p, b_y = state
-        return np.sign(p-b_y)
+        p, b_x = state
+        return np.sign(p - b_x)
         ####

@@ -19,13 +19,13 @@ class QLearningAgent(BaseAgent):
     
     def discretize(self, s):
         #### Write your code here for task 9
-        return tuple(map(lambda x : int(x/self.d)*self.d, s))
+        return tuple(map(lambda x: int(x/self.d)*self.d, s))
         ####
     
     def transform_state(self, state):
         p, op, b, vb = state
         #### Write your code here for task  4
-        state = (p, b[1])
+        state = (p-b[1],)
         ####
 
         #### Write your code here for task 9
@@ -45,7 +45,7 @@ class QLearningAgent(BaseAgent):
 
         #### Write your code here for task 7
         if done:
-            self.Q[state][action] = reward
+            self.Q[state][action] += reward
         else:
             self.Q[state][action] += self.lr * (reward + self.gamma * max(self.Q[next_state].values()) - self.Q[state][action])
         ####
@@ -57,12 +57,14 @@ class QLearningAgent(BaseAgent):
 
         #### Write your code here for task 10
         if training and np.random.random() < (self.eps - self.eeps) * np.exp(-self.edecay * self.step) + self.eeps:
-            return np.random.choice((-1, 0, 1))
+            action = np.random.choice([-1, 0, 1])
+            return action
         ####
 
         #### Write your code here for task 11
         if self.Q[state][-1] == self.Q[state][0] == self.Q[state][1]:
-            return np.random.choice((-1, 0, 1))
+            action = np.random.choice([-1, 0, 1])
+            return action
         ####
         
         #### Write your code here for task 6
@@ -72,6 +74,6 @@ class QLearningAgent(BaseAgent):
     
     def check_q_value(self, state):
         #### Write your code here for task 5
-        if not state in self.Q:
+        if state not in self.Q:
             self.Q[state] = {-1 : 0, 0 : 0, 1 : 0}
         ####

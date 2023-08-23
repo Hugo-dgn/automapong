@@ -6,7 +6,7 @@ import inspect
 from agents import RandomAgent
 
 from train import train
-from play import benchmark
+from schearch.benchmark import benchmark
 
 def grid_schearch(agentConstructor, trainAgent, benchmarkAgent, train_episode, benchmark_episode, dt, **kwards):
 

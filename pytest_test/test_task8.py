@@ -158,7 +158,7 @@ class Schedule:
 
         self.step += 1
 
-class DummieAgent(agents.BaseAgent):
+class DummyAgent(agents.BaseAgent):
 
     def __init__(self, name):
         agents.BaseAgent.__init__(self, name)
@@ -202,7 +202,7 @@ def test_task3():
     pong.Env = CustomEnv
     pong.render = custom_render
 
-    train.train(DummieAgent("1"), DummieAgent("2"), 1000, right_dt)
+    train.train(DummyAgent("1"), DummyAgent("2"), 1000, right_dt)
 
     pong.Env = _Env
     pong.render = _render

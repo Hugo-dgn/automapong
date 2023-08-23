@@ -1,89 +1,18 @@
-import torch
 import torch.nn as nn
-
-# Set a seed for the random number generator
-seed_value = 42
-
-def set_seed():
-    torch.manual_seed(seed_value)
-    # If using CUDA (GPU), also set the seed for GPU
-    if torch.cuda.is_available():
-        torch.cuda.manual_seed_all(seed_value)
 
 
 class DQN_1(nn.Module):
     
     def __init__(self, n_inputs):
-        set_seed()
-
         nn.Module.__init__(self) # Tell torch that this class is a neural network
 
         #### Write your code here for task 12
         self.network = nn.Sequential(
-            nn.Linear(n_inputs, 32),
+            nn.Linear(n_inputs, 64), 
             nn.ReLU(),
-            nn.Linear(32, 64),
+            nn.Linear(64, 64),
             nn.ReLU(),
-            nn.Linear(64, 32),
-            nn.ReLU(),
-            nn.Linear(32, 3)
-        )
-        ####
-    
-    def forward(self, x):
-        #### Write your code here for task 12
-        #return self.network(x)
-        pass
-        ####
-    
-class DQN_2(nn.Module):
-    
-    def __init__(self, n_inputs):
-        set_seed()
-
-        nn.Module.__init__(self) # Tell torch that this class is a neural network
-
-        #### Write your code here for task 12
-        self.network = nn.Sequential(
-            nn.Linear(n_inputs, 32),
-            nn.ReLU(),
-            nn.Linear(32, 64),
-            nn.ReLU(),
-            nn.Linear(64, 128),
-            nn.ReLU(),
-            nn.Linear(128, 64),
-            nn.ReLU(),
-            nn.Linear(64, 32),
-            nn.ReLU(),
-            nn.Linear(32, 3)
-        )
-        ####
-    
-    def forward(self, x):
-        #### Write your code here for task 12
-        return self.network(x)
-        ####
-
-class DQN_3(nn.Module):
-    
-    def __init__(self, n_inputs):
-        set_seed()
-
-        nn.Module.__init__(self) # Tell torch that this class is a neural network
-
-        #### Write your code here for task 12
-        self.network = nn.Sequential(
-            nn.Linear(n_inputs, 64),
-            nn.PReLU(),
-            nn.Linear(64, 256),
-            nn.PReLU(),
-            nn.Linear(256, 1024),
-            nn.PReLU(),
-            nn.Linear(1024, 256),
-            nn.PReLU(),
-            nn.Linear(256, 32),
-            nn.PReLU(),
-            nn.Linear(32, 3)
+            nn.Linear(64, 3)
         )
         ####
     

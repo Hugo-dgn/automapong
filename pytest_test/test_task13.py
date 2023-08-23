@@ -5,7 +5,14 @@ import network
 
 def test_task13():
     dqn = network.get_topology(1)
-    agent = agents.DeepQLearningAgent("noname", dqn=dqn, lr=0.1, gamma=0.9, eps=0.1, eeps=0, edecay=1, capacity=1000, batch=32, tau=0.1, skip=1)
+    message = None
+    try:
+        agent = agents.DeepQLearningAgent("noname", dqn=dqn, lr=0.1, gamma=0.9, eps=0.1, eeps=0, edecay=1, capacity=1000, batch=32, tau=0.1, skip=1)
+    #I want to catch the error that is raised when the transform_state function is not implemented
+    except Exception as e:
+        message = f"The DeepQLearningAgent couldn't be initialized. It is most likely due to a wrong implementation of `transform_state`. Got the following error:\n {e}"
+    if not message is None:
+        raise AssertionError(message)
     for i in range(10):
         state = (i, i, (i, i), (i, i))
 
