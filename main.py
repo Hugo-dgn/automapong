@@ -225,6 +225,11 @@ def grid(args):
 
     grid_schearch(GridAgent, trainagent, benchmarkagent, args.train_episode, args.benchmark_episode, args.dt, **kwards)
 
+def copy(args):
+    agent = agents.get_agent(args.agent)
+    agent.name = args.new_agent
+    agent.save()
+
 def main():
     parser = argparse.ArgumentParser(description="Agent Game")
     
@@ -233,6 +238,11 @@ def main():
     play_parser = subparsers.add_parser("play", help="Play with agents")
     play_parser.add_argument("agents", nargs=2, help="List of agents to play with")
     play_parser.set_defaults(func=_play)
+    
+    copy_parser = subparsers.add_parser("copy", help="Copy an agent")
+    copy_parser.add_argument("agent", help="name of the agent to copy")
+    copy_parser.add_argument("new_agent", help="name of the new agent")
+    copy_parser.set_defaults(func=copy)
 
     train_parser = subparsers.add_parser("train", help="Train agents")
     train_parser.add_argument("agents", nargs="+", help="List of agents to train")
