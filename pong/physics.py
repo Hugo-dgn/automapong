@@ -28,7 +28,17 @@ def _move_player(p, v, dt):
     return np.clip(p + v*dt, config["player_lenght"]/2, 1-config["player_lenght"]/2)
 
 def _move_ball(b, v, dt):
-    return np.clip(b+v*dt, [0, 0], [config["lenght_win"], 1])
+    new_b = b + v*dt
+    
+    if new_b[1] > 1:
+        interpolation_dt = (1-b[1])/v[1]
+        new_b = b + v*interpolation_dt
+    elif new_b[1] < 0:
+        interpolation_dt = -b[1]/v[1]
+        new_b = b + v*interpolation_dt
+        
+    
+    return np.clip(new_b, [0, 0], [config["lenght_win"], 1])
 
 def _resolve_collision(p1, p2, b, vb):
     if b[0] == 0:

@@ -13,7 +13,7 @@ run = True
 while run:
 
     dt, run = pong.render(env)  # affiche le jeu et donne l'intervalle de temps qui s'est écoulé depuis la dernière frame. C'est important pour la physique du jeu (cf delta time sur internet)
-
+    
     # Obtenir les actions des deux joueurs
     action1 = agent1.act(state1, training=False)  # action est dans {-1, 0, 1}
     action2 = agent2.act(state2, training=False)  # action est dans {-1, 0, 1}
