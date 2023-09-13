@@ -6,3 +6,4 @@ dgx*.sh
 agents/save/*
 
 out.out
+job.batch
