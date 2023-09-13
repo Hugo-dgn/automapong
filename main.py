@@ -100,6 +100,8 @@ def _train(args):
     print("Done.")
 
 def create(args):
+    if not os.path.exists("agents/save"):
+        os.makedirs("agents/save")
     if args.agent in os.listdir("agents/save"):
         decision = input(f"Agent with name {args.agent} already exist. Do you want to overwrite this agent ? (y/n) :")
         if decision.lower().strip() != "y":
