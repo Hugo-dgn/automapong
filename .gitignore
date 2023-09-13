@@ -4,3 +4,5 @@ env/
 dgx*.sh
 
 agents/save/*
+
+out.out

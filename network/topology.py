@@ -32,7 +32,7 @@ class DQN_2(nn.Module):
             nn.ReLU(),
             nn.Linear(64, 1024),
             nn.ReLU(),
-            nn.Linear(1024, 64)
+            nn.Linear(1024, 64),
             nn.ReLU(),
             nn.Linear(64, 3)
         )
