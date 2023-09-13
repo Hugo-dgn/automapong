@@ -169,8 +169,8 @@ def reward(args):
         n1 = int(len(y)/100) + 1
         n2 = int(len(y)/10) + 1
 
-        pad_y1 = np.pad(y, (int(n1/2), n1 - int(n1/2) - 1), 'constant', constant_values=(y[0], y[-1]))
-        pad_y2 = np.pad(y, (int(n2/2), n2 - int(n2/2) - 1), 'constant', constant_values=(y[0], y[-1]))
+        pad_y1 = np.pad(y, (int(n1/2), n1 - int(n1/2) - 1), 'constant', constant_values=(np.min(y), y[-1]))
+        pad_y2 = np.pad(y, (int(n2/2), n2 - int(n2/2) - 1), 'constant', constant_values=(np.min(y), y[-1]))
 
         window1 = get_gauss_kernel(n1)
         y1 = np.convolve(pad_y1, window1, mode='valid')
