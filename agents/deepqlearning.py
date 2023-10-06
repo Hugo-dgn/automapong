@@ -26,7 +26,7 @@ class DeepQLearningAgent(BaseAgent):
 
         dummie_state = (0, 0, (0, 0), (0, 0))
 
-        n = len(self.transform_state(dummie_state).squeeze(0))
+        n = len(self.transform_state(dummie_state))
 
         self.dqn = dqn(n) #policy net
         self._target_dqn = dqn(n) #target net
@@ -37,10 +37,14 @@ class DeepQLearningAgent(BaseAgent):
         self.optimizer = torch.optim.Adam(self.dqn.parameters(), lr=self.lr, amsgrad=True) #optimizer
         self.criterion = torch.nn.SmoothL1Loss() #loss function
     
+    def init(self):
+        self.dqn.to(device)
+        self._target_dqn.to(device)
+    
     def transform_state(self, state):
         #### Write your code here for task 13
         p, op, b, vb = state
-        state = torch.tensor((p, b[0], b[1], vb[0], vb[1]), dtype=torch.float32, device=device).unsqueeze(0)
+        state = (p, b[0], b[1], vb[0], vb[1])
         return state
         ####
 
@@ -68,13 +72,13 @@ class DeepQLearningAgent(BaseAgent):
     def act(self, state, training):
 
         state = self.transform_state(state) # transform the state in something usable
-
+        state = torch.tensor(state, dtype=torch.float32, device=device).unsqueeze(0)
         #epsilon greedy
         if training and np.random.random() < (self.eps - self.eeps) * np.exp(-self.edecay * self.step) + self.eeps:
             return np.random.choice([-1, 0, 1])
         
         #### Write your code here for task 14
-        qvalues = self.dqn(state)
+        qvalues = self.dqn(state).cpu()
         action = torch.argmax(qvalues).item() - 1
         return action
         ####
@@ -130,9 +134,9 @@ class ReplayMemory:
     
 def _get_transition(states, actions, next_states, rewards, dones):
     transition = {
-        "state" : torch.cat(states),
+        "state" : torch.tensor(states, dtype=torch.float32, device=device),
         "action" : torch.tensor(actions, dtype=torch.int64, device=device),
-        "next_state" : torch.cat(next_states),
+        "next_state" : torch.tensor(next_states, dtype=torch.float32, device=device),
         "reward" : torch.tensor(rewards, device=device),
         "done" : torch.tensor(dones, device=device)
     }

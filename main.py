@@ -25,7 +25,7 @@ from schearch import grid_schearch
 
 gamma = 0.9
 eps = 1
-eeps = 0
+eeps = 0.1
 edecay = 0.01
 dqn = 1
 lr = 1e-3
@@ -85,10 +85,10 @@ def _train(args):
                     elif agent == 0:
                         print(f"draw : {win}")
 
-                if agent1.name == "simple" :
+                if agent1.name in do_not_train:
                     print(f"Saving agent {agent2.name}.")
-                elif agent2.name == "simple":
-                    print(f"Saving agent {agent2.name}.")
+                elif agent2.name in do_not_train:
+                    print(f"Saving agent {agent1.name}.")
                 else:
                     print(f"Saving agents {agent1.name} and {agent2.name}.")
 
