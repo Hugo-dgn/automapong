@@ -1,6 +1,6 @@
 import pygame
 
-win_size = 500
+win_size = 300
 
 import utils
 config = utils.get_config()
