@@ -2,6 +2,6 @@ __pycache__
 .pytest_cache
 env/
 dgx*.sh
-
+save/
 out.out
 job.batch

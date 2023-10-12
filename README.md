@@ -1,5 +1,19 @@
 # Tutoriel : créer une IA pour Pong
 
+## Clone et installation de requirements
+
+Pour télécharger le repo Git sur votre PC et installer les requirements, suivez ces étapes :
+
+```bash
+git clone https://github.com/Hugo-dgn/automapong
+```
+
+Cela créera un dossier "automapong". Rendez-vous dans ce dossier et installez les requirements avec cette commande :
+
+```bash
+pip install -r requirements.txt
+```
+
 ## Qu'est ce que le RL?
 
 Le Reinforcement Learning (RL) est une branche de l'apprentissage automatique qui se concentre sur la façon dont un agent peut apprendre à prendre des décisions pour maximiser une récompense dans un environnement. Contrairement à l'apprentissage supervisé où les données sont étiquetées, et à l'apprentissage non supervisé où les modèles découvrent des structures cachées, le RL implique un processus d'interaction itératif où l'agent effectue des actions, observe les résultats et ajuste sa stratégie pour obtenir de meilleures récompenses au fil du temps.
