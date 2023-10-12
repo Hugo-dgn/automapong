@@ -839,7 +839,7 @@ class DeepQLearningAgent(BaseAgent):
 
         dummie_state = (0, 0, (0, 0), (0, 0))
 
-        n = len(self.transform_state(dummie_state).squeeze(0))
+        n = len(self.transform_state(dummie_state))
 
         self.dqn = dqn(n) #policy net
         self._target_dqn = dqn(n) #target net
@@ -849,6 +849,10 @@ class DeepQLearningAgent(BaseAgent):
 
         self.optimizer = torch.optim.Adam(self.dqn.parameters(), lr=self.lr, amsgrad=True) #optimizer
         self.criterion = torch.nn.SmoothL1Loss() #loss function
+    
+    def init(self):
+        self.dqn.to(device)
+        self._target_dqn.to(device)
     
     def transform_state(self, state):
         #### Write your code here for task 13
@@ -870,7 +874,7 @@ class DeepQLearningAgent(BaseAgent):
     def act(self, state, training):
 
         state = self.transform_state(state) # transform the state in something usable
-
+        state = torch.tensor(state, dtype=torch.float32, device=device).unsqueeze(0)
         #epsilon greedy
         if training and np.random.random() < (self.eps - self.eeps) * np.exp(-self.edecay * self.step) + self.eeps:
             return np.random.choice([-1, 0, 1])
@@ -900,7 +904,7 @@ class DeepQLearningAgent(BaseAgent):
 
 ### Tâche 13
 
-Complétez la méthode `transform_state` pour qu'elle renvoie un état sous la forme d'un tenseur `torch` avec une forme (`shape`) égale à `(1, k)`. Par exemple : `torch.tensor([[p, b[1]]], dtype=torch.float32)`. Faites attention au paramètre `dtype` qui est important, car `torch` est optimisé pour les `float32`.
+Complétez la méthode `transform_state` pour qu'elle renvoie un état sous la forme d'un `tuple` avec une forme (`shape`) égale à `(k,)`. Par exemple : `(p, b[1])`.
 
 Pour vérifier votre implémentation :
 ```bash

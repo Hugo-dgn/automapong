@@ -95,7 +95,7 @@ class Scheduler:
             raise Exception(message)
 
 def dummy_transform_state(state):
-    return torch.tensor([1], dtype=torch.float32).unsqueeze(0)
+    return (1,)
 
 def dummy_get_loss(self):
     loss = agents.DeepQLearningAgent.get_loss(self)

@@ -11,6 +11,8 @@ def test_task14():
         state = (i, i, (i, i), (i, i))
         tstate = agent.transform_state(state)
 
+        tstate = torch.tensor(tstate, dtype=torch.float32).unsqueeze(0)
+
         qvalues = agent.dqn(tstate)
         target = torch.argmax(qvalues) - 1
         answer = agent.act(state, False)

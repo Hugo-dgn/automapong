@@ -1,4 +1,4 @@
-import torch
+import numpy as np
 
 import agents
 import network
@@ -18,9 +18,13 @@ def test_task13():
 
         answer = agent.transform_state(state)
 
-        if not isinstance(answer, torch.Tensor):
-            message = f"For deep Q learning, `transform_state` must return a torch.Tensor instance. Got {answer} with type {type(answer)}"
+        if not isinstance(answer, tuple):
+            message = f"For deep Q learning, `transform_state` must return a tuple instance. Got {answer} with type {type(answer)}"
             raise AssertionError(message)
-        if not (answer.shape[0] == 1 and len(answer.shape) == 2):
-            message = f"For deep Q learning, `transform_state` must return a torch.Tensor instance with shape (1, k). Got {answer} with shape {answer.shape}"
+        try:
+            if not (len(np.array(answer).shape) == 1):
+                message = f"For deep Q learning, `transform_state` must return a tuple instance with shape (k,). Got {answer} with shape {np.array(answer).shape}"
+                raise AssertionError(message)
+        except ValueError:
+            message = f"For deep Q learning, `transform_state` must return a tuple instance with shape (k,). Got {answer}."
             raise AssertionError(message)
