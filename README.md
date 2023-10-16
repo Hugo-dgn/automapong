@@ -5,7 +5,7 @@
 Pour télécharger le repo Git sur votre PC et installer les requirements, suivez ces étapes :
 
 ```bash
-git clone https://github.com/Hugo-dgn/automapong
+git clone -b blank https://github.com/Hugo-dgn/automapong
 ```
 
 Cela créera un dossier "automapong". Rendez-vous dans ce dossier et installez les requirements avec cette commande :
