@@ -43,9 +43,7 @@ class DeepQLearningAgent(BaseAgent):
     
     def transform_state(self, state):
         #### Write your code here for task 13
-        p, op, b, vb = state
-        state = (p, b[0], b[1], vb[0], vb[1])
-        return state
+        pass
         ####
 
     def learn(self, state, action, reward, next_state, done):
@@ -57,16 +55,7 @@ class DeepQLearningAgent(BaseAgent):
         self.push(reward, done)
 
         #### Write your code here for task 17
-        self.memory.push(state, action, next_state, reward, done)
-
-        if len(self.memory) > self.batch and self.step % self.skip == 0:
-            loss = self.get_loss()
-            self.soft_update_target()
-
-            self.optimizer.zero_grad()
-            loss = self.get_loss()
-            loss.backward()
-            self.optimizer.step()
+        pass
         ####
 
     def act(self, state, training):
@@ -78,20 +67,12 @@ class DeepQLearningAgent(BaseAgent):
             return np.random.choice([-1, 0, 1])
         
         #### Write your code here for task 14
-        qvalues = self.dqn(state).cpu()
-        action = torch.argmax(qvalues).item() - 1
-        return action
+        pass
         ####
     
     def soft_update_target(self):
         #### Write your code here for task 16
-        target_net_state_dict = self._target_dqn.state_dict()
-        dqn_net_state_dict = self.dqn.state_dict()
-
-        for key in dqn_net_state_dict:
-            target_net_state_dict[key] = dqn_net_state_dict[key]*self.tau + target_net_state_dict[key]*(1-self.tau)
-
-        self._target_dqn.load_state_dict(target_net_state_dict)
+        pass
         ####
     
     def get_loss(self):
@@ -104,12 +85,7 @@ class DeepQLearningAgent(BaseAgent):
         done = transition["done"]
         
         #### Write your code here for task 15
-        expected_qvalues = self.dqn(state).gather(1, action.unsqueeze(1)).squeeze(1)
-        target_qvalues = self._target_dqn(next_state).max(1).values
-
-        loss = self.criterion(expected_qvalues, reward + self.gamma * target_qvalues * (1 - done))
-
-        return loss
+        pass
         ####
 
 class ReplayMemory:
